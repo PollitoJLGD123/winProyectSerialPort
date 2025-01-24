@@ -1,0 +1,10 @@
+E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\bin\Debug\winTwoPlays.exe.config
+E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\bin\Debug\winTwoPlays.exe
+E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\bin\Debug\winTwoPlays.pdb
+E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.csproj.AssemblyReference.cache
+E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.Form1.resources
+E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.Properties.Resources.resources
+E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.csproj.GenerateResource.cache
+E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.csproj.CoreCompileInputs.cache
+E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.exe
+E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.pdb
