@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblLenght = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.btnEnviarImagen = new System.Windows.Forms.Button();
@@ -49,14 +50,13 @@
             this.barraProgreso = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.serialPort = new System.IO.Ports.SerialPort(this.components);
-            this.label9 = new System.Windows.Forms.Label();
-            this.lblLenght = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.lblLenght);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.label8);
@@ -80,6 +80,27 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(976, 729);
             this.panel1.TabIndex = 0;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // lblLenght
+            // 
+            this.lblLenght.AutoSize = true;
+            this.lblLenght.Font = new System.Drawing.Font("Gabriola", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLenght.Location = new System.Drawing.Point(106, 307);
+            this.lblLenght.Name = "lblLenght";
+            this.lblLenght.Size = new System.Drawing.Size(38, 42);
+            this.lblLenght.TabIndex = 18;
+            this.lblLenght.Text = "00";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Gabriola", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(35, 312);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(64, 37);
+            this.label9.TabIndex = 17;
+            this.label9.Text = "Lenght:";
             // 
             // label8
             // 
@@ -250,25 +271,15 @@
             // 
             this.fileDialog.FileName = "openFileDialog1";
             // 
-            // label9
+            // button1
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Gabriola", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(35, 312);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(64, 37);
-            this.label9.TabIndex = 17;
-            this.label9.Text = "Lenght:";
-            // 
-            // lblLenght
-            // 
-            this.lblLenght.AutoSize = true;
-            this.lblLenght.Font = new System.Drawing.Font("Gabriola", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLenght.Location = new System.Drawing.Point(106, 307);
-            this.lblLenght.Name = "lblLenght";
-            this.lblLenght.Size = new System.Drawing.Size(38, 42);
-            this.lblLenght.TabIndex = 18;
-            this.lblLenght.Text = "00";
+            this.button1.Location = new System.Drawing.Point(633, 678);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 19;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
@@ -310,9 +321,9 @@
         private System.Windows.Forms.Button btnEnviarImagen;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.IO.Ports.SerialPort serialPort;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lblLenght;
+        private System.Windows.Forms.Button button1;
     }
 }
 

@@ -21,6 +21,8 @@ namespace winTwoPlays
         public Form1()
         {
             InitializeComponent();
+            conexion = new claseSendRecive();
+            conexion.Inicializar("COM1");
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -52,6 +54,7 @@ namespace winTwoPlays
                 else
                 {
                     string texto = txtMensaje.Text;
+                    conexion.enviarMensaje(texto);
 
                 }
             }
@@ -59,6 +62,16 @@ namespace winTwoPlays
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            conexion.Recibir();
         }
     }
 }
