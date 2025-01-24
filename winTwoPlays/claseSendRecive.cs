@@ -4,25 +4,64 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
+using System.Threading;
+using System.Windows.Forms;
+using System.IO;
 
 namespace winTwoPlays
 {
-    internal class claseSendRecive
+    public class claseSendRecive
     {
 
         private SerialPort puerto;
+        byte[] TramaEnvio;
+        byte[] TramCabaceraEnvio;
+        byte[] tramaRelleno;
+
+        byte[] TramaRecibida;
+
+        private classArchivo arhivoEnviar;
+        private FileStream FlujoArchivoEnviar;
+        private BinaryReader LeyendoArchivo;
+
+
+        private classArchivo arhivoRecibir;
+        private FileStream FlujoArchivoRecibir;
+        private BinaryWriter EscribiendoArchivo;
+
+        private Boolean BufferSalidaVacio;
+
+
+        Thread procesoVerificaSalida;
 
         public claseSendRecive() 
-        { 
+        {
+            TramaEnvio = new byte[1024];
+            TramCabaceraEnvio = new byte[5];
+            tramaRelleno = new byte[1024];
 
+            TramaRecibida = new byte[1024];
+
+            for (int i = 0; i <= 1023; i++)
+            { tramaRelleno[i] = 64; }
         }
 
-        public void Inicializar(string nombrePuerto)
+        public void Inicializar(string nombrePuerto,int baud,int data_bits, 
+            StopBits stop_bits, Parity parity_bits)
         {
-            puerto = new SerialPort(nombrePuerto, 57600, Parity.Even, 8, StopBits.Two);
-            puerto.ReceivedBytesThreshold = 1024; //bytes del bufer de entrada
+            puerto = new SerialPort(nombrePuerto, baud, parity_bits, data_bits, stop_bits);
+            puerto.ReceivedBytesThreshold = 1024;
             puerto.DataReceived += new SerialDataReceivedEventHandler(dataReceived);
+            puerto.Open();
 
+            //BufferSalidaVacio = true;
+            //procesoVerificaSalida = new Thread(VerificandoSalida);
+            //procesoVerificaSalida.Start();
+
+            //arhivoEnviar = new classArchivo();
+            //arhivoRecibir = new classArchivo();
+
+            MessageBox.Show("apertura del puerto" + puerto.PortName);
 
         }
 
@@ -36,6 +75,27 @@ namespace winTwoPlays
 
         }
 
+        private void VerificandoSalida()
+        {
+            while (true)
+            {
+                if (puerto.BytesToWrite > 0)
+                    BufferSalidaVacio = false;
+                else
+                    BufferSalidaVacio = true;
+            }
+
+        }
+
+        public Boolean EstaAbierto()
+        {
+            return puerto.IsOpen;
+        }
+
+        public void cerrarPuerto()
+        {
+            puerto.Close();
+        }
 
     }
 }

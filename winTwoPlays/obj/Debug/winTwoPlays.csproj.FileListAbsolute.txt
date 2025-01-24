@@ -8,3 +8,4 @@ E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlay
 E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.csproj.CoreCompileInputs.cache
 E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.exe
 E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.pdb
+E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.frmSend.resources
