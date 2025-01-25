@@ -21,10 +21,11 @@ namespace winTwoPlays
             InitializeComponent();
         }
 
-        public frmSend(claseSendRecive conexion)
+        public frmSend(string name,claseSendRecive conexion)
         {
             InitializeComponent();
             this.conexion = conexion;
+            lblTitulo.Text += $" {name}";
         }
 
         private void btnEnviarMensaje_Click(object sender, EventArgs e)

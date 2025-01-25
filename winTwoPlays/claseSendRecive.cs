@@ -61,7 +61,7 @@ namespace winTwoPlays
             //arhivoEnviar = new classArchivo();
             //arhivoRecibir = new classArchivo();
 
-            MessageBox.Show("apertura del puerto" + puerto.PortName);
+            MessageBox.Show("Puerto Encendido: " + puerto.PortName);
 
         }
 

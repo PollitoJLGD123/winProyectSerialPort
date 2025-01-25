@@ -123,7 +123,7 @@ namespace winTwoPlays
         {
             if (conexion.EstaAbierto())
             {
-                accion1 = new frmSend(conexion);
+                accion1 = new frmSend("COM 1",conexion);
                 accion1.Visible = true;
             }
             else
@@ -160,7 +160,7 @@ namespace winTwoPlays
         {
             if (conexion2.EstaAbierto())
             {
-                accion2 = new frmSend(conexion2);
+                accion2 = new frmSend("COM 2",conexion2);
                 accion2.Visible = true;
             }
             else

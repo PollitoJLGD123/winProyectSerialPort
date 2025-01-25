@@ -49,7 +49,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtMensaje = new System.Windows.Forms.TextBox();
             this.barraProgreso = new System.Windows.Forms.ProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblTitulo = new System.Windows.Forms.Label();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.panel1.SuspendLayout();
@@ -75,7 +75,7 @@
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.txtMensaje);
             this.panel1.Controls.Add(this.barraProgreso);
-            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.lblTitulo);
             this.panel1.Location = new System.Drawing.Point(2, 2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(976, 712);
@@ -257,16 +257,16 @@
             this.barraProgreso.Size = new System.Drawing.Size(270, 23);
             this.barraProgreso.TabIndex = 1;
             // 
-            // label1
+            // lblTitulo
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("MV Boli", 28.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Blue;
-            this.label1.Location = new System.Drawing.Point(157, 19);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(679, 62);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Serial Port Send and Recive";
+            this.lblTitulo.AutoSize = true;
+            this.lblTitulo.Font = new System.Drawing.Font("MV Boli", 25.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitulo.ForeColor = System.Drawing.Color.Blue;
+            this.lblTitulo.Location = new System.Drawing.Point(268, 20);
+            this.lblTitulo.Name = "lblTitulo";
+            this.lblTitulo.Size = new System.Drawing.Size(262, 58);
+            this.lblTitulo.TabIndex = 0;
+            this.lblTitulo.Text = "Serial Port";
             // 
             // fileDialog
             // 
@@ -310,7 +310,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtMensaje;
         private System.Windows.Forms.ProgressBar barraProgreso;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblTitulo;
         private System.Windows.Forms.OpenFileDialog fileDialog;
         private System.IO.Ports.SerialPort serialPort;
     }
