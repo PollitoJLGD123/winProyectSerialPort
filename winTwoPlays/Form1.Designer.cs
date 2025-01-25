@@ -37,55 +37,62 @@
             this.label1 = new System.Windows.Forms.Label();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
-            this.barraProgreso = new System.Windows.Forms.ProgressBar();
-            this.checkConectado = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.barraProgreso1 = new System.Windows.Forms.ProgressBar();
+            this.checkConectado1 = new System.Windows.Forms.CheckBox();
+            this.btnIngresar = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.comboPort = new System.Windows.Forms.ComboBox();
-            this.btnClose = new System.Windows.Forms.Button();
+            this.btnClose1 = new System.Windows.Forms.Button();
             this.comboBaud = new System.Windows.Forms.ComboBox();
             this.comboDataBits = new System.Windows.Forms.ComboBox();
             this.comboStopBits = new System.Windows.Forms.ComboBox();
             this.comboParityBits = new System.Windows.Forms.ComboBox();
-            this.lblEstado = new System.Windows.Forms.Label();
+            this.lblEstado1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblPuerto1 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblPuerto2 = new System.Windows.Forms.Label();
+            this.checkConectado2 = new System.Windows.Forms.CheckBox();
+            this.lblEstado2 = new System.Windows.Forms.Label();
+            this.btnClose2 = new System.Windows.Forms.Button();
+            this.btnIngresar2 = new System.Windows.Forms.Button();
+            this.barraProgreso2 = new System.Windows.Forms.ProgressBar();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.groupBox2);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.comboParityBits);
             this.panel1.Controls.Add(this.comboStopBits);
             this.panel1.Controls.Add(this.comboDataBits);
             this.panel1.Controls.Add(this.comboBaud);
-            this.panel1.Controls.Add(this.btnClose);
             this.panel1.Controls.Add(this.comboPort);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.btnConectar);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.barraProgreso);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(1, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(622, 590);
+            this.panel1.Size = new System.Drawing.Size(910, 692);
             this.panel1.TabIndex = 0;
             // 
             // label8
             // 
             this.label8.Image = ((System.Drawing.Image)(resources.GetObject("label8.Image")));
-            this.label8.Location = new System.Drawing.Point(385, 141);
+            this.label8.Location = new System.Drawing.Point(127, 477);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(197, 176);
             this.label8.TabIndex = 16;
@@ -116,7 +123,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("MV Boli", 28.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Blue;
-            this.label1.Location = new System.Drawing.Point(11, 9);
+            this.label1.Location = new System.Drawing.Point(171, 19);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(551, 62);
             this.label1.TabIndex = 0;
@@ -126,35 +133,35 @@
             // 
             this.fileDialog.FileName = "openFileDialog1";
             // 
-            // barraProgreso
+            // barraProgreso1
             // 
-            this.barraProgreso.Location = new System.Drawing.Point(54, 467);
-            this.barraProgreso.Name = "barraProgreso";
-            this.barraProgreso.Size = new System.Drawing.Size(270, 23);
-            this.barraProgreso.TabIndex = 1;
+            this.barraProgreso1.Location = new System.Drawing.Point(25, 139);
+            this.barraProgreso1.Name = "barraProgreso1";
+            this.barraProgreso1.Size = new System.Drawing.Size(289, 23);
+            this.barraProgreso1.TabIndex = 1;
             // 
-            // checkConectado
+            // checkConectado1
             // 
-            this.checkConectado.AutoSize = true;
-            this.checkConectado.Enabled = false;
-            this.checkConectado.Font = new System.Drawing.Font("Lucida Handwriting", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkConectado.Location = new System.Drawing.Point(17, 66);
-            this.checkConectado.Name = "checkConectado";
-            this.checkConectado.Size = new System.Drawing.Size(157, 21);
-            this.checkConectado.TabIndex = 8;
-            this.checkConectado.Text = "Conectado ✓ ✖";
-            this.checkConectado.UseVisualStyleBackColor = true;
+            this.checkConectado1.AutoSize = true;
+            this.checkConectado1.Enabled = false;
+            this.checkConectado1.Font = new System.Drawing.Font("Lucida Handwriting", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkConectado1.Location = new System.Drawing.Point(98, 103);
+            this.checkConectado1.Name = "checkConectado1";
+            this.checkConectado1.Size = new System.Drawing.Size(157, 21);
+            this.checkConectado1.TabIndex = 8;
+            this.checkConectado1.Text = "Conectado ✓ ✖";
+            this.checkConectado1.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnIngresar
             // 
-            this.button1.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(222, 529);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(180, 43);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "Ingresar";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnIngresar.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnIngresar.Location = new System.Drawing.Point(40, 188);
+            this.btnIngresar.Name = "btnIngresar";
+            this.btnIngresar.Size = new System.Drawing.Size(94, 43);
+            this.btnIngresar.TabIndex = 17;
+            this.btnIngresar.Text = "Ingresar";
+            this.btnIngresar.UseVisualStyleBackColor = true;
+            this.btnIngresar.Click += new System.EventHandler(this.button1_Click);
             // 
             // label3
             // 
@@ -215,16 +222,16 @@
             this.comboPort.Size = new System.Drawing.Size(195, 24);
             this.comboPort.TabIndex = 23;
             // 
-            // btnClose
+            // btnClose1
             // 
-            this.btnClose.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.Location = new System.Drawing.Point(200, 399);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(124, 43);
-            this.btnClose.TabIndex = 25;
-            this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.btnClose1.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose1.Location = new System.Drawing.Point(202, 188);
+            this.btnClose1.Name = "btnClose1";
+            this.btnClose1.Size = new System.Drawing.Size(93, 43);
+            this.btnClose1.TabIndex = 25;
+            this.btnClose1.Text = "Close";
+            this.btnClose1.UseVisualStyleBackColor = true;
+            this.btnClose1.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // comboBaud
             // 
@@ -278,34 +285,125 @@
             this.comboParityBits.Size = new System.Drawing.Size(195, 24);
             this.comboParityBits.TabIndex = 29;
             // 
-            // lblEstado
+            // lblEstado1
             // 
-            this.lblEstado.AutoSize = true;
-            this.lblEstado.BackColor = System.Drawing.Color.Transparent;
-            this.lblEstado.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEstado.ForeColor = System.Drawing.Color.Red;
-            this.lblEstado.Location = new System.Drawing.Point(68, 18);
-            this.lblEstado.Name = "lblEstado";
-            this.lblEstado.Size = new System.Drawing.Size(65, 29);
-            this.lblEstado.TabIndex = 30;
-            this.lblEstado.Text = "OFF";
+            this.lblEstado1.AutoSize = true;
+            this.lblEstado1.BackColor = System.Drawing.Color.Transparent;
+            this.lblEstado1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEstado1.ForeColor = System.Drawing.Color.Red;
+            this.lblEstado1.Location = new System.Drawing.Point(143, 48);
+            this.lblEstado1.Name = "lblEstado1";
+            this.lblEstado1.Size = new System.Drawing.Size(65, 29);
+            this.lblEstado1.TabIndex = 30;
+            this.lblEstado1.Text = "OFF";
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.checkConectado);
-            this.groupBox1.Controls.Add(this.lblEstado);
-            this.groupBox1.Location = new System.Drawing.Point(388, 375);
+            this.groupBox1.Controls.Add(this.lblPuerto1);
+            this.groupBox1.Controls.Add(this.checkConectado1);
+            this.groupBox1.Controls.Add(this.lblEstado1);
+            this.groupBox1.Controls.Add(this.btnClose1);
+            this.groupBox1.Controls.Add(this.btnIngresar);
+            this.groupBox1.Controls.Add(this.barraProgreso1);
+            this.groupBox1.Location = new System.Drawing.Point(484, 123);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 100);
+            this.groupBox1.Size = new System.Drawing.Size(330, 261);
             this.groupBox1.TabIndex = 31;
             this.groupBox1.TabStop = false;
+            // 
+            // lblPuerto1
+            // 
+            this.lblPuerto1.AutoSize = true;
+            this.lblPuerto1.Font = new System.Drawing.Font("Bell MT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPuerto1.Location = new System.Drawing.Point(21, 18);
+            this.lblPuerto1.Name = "lblPuerto1";
+            this.lblPuerto1.Size = new System.Drawing.Size(85, 23);
+            this.lblPuerto1.TabIndex = 32;
+            this.lblPuerto1.Text = "Puerto 1:";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.lblPuerto2);
+            this.groupBox2.Controls.Add(this.checkConectado2);
+            this.groupBox2.Controls.Add(this.lblEstado2);
+            this.groupBox2.Controls.Add(this.btnClose2);
+            this.groupBox2.Controls.Add(this.btnIngresar2);
+            this.groupBox2.Controls.Add(this.barraProgreso2);
+            this.groupBox2.Location = new System.Drawing.Point(484, 399);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(330, 280);
+            this.groupBox2.TabIndex = 33;
+            this.groupBox2.TabStop = false;
+            // 
+            // lblPuerto2
+            // 
+            this.lblPuerto2.AutoSize = true;
+            this.lblPuerto2.Font = new System.Drawing.Font("Bell MT", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPuerto2.Location = new System.Drawing.Point(21, 18);
+            this.lblPuerto2.Name = "lblPuerto2";
+            this.lblPuerto2.Size = new System.Drawing.Size(85, 23);
+            this.lblPuerto2.TabIndex = 32;
+            this.lblPuerto2.Text = "Puerto 2:";
+            // 
+            // checkConectado2
+            // 
+            this.checkConectado2.AutoSize = true;
+            this.checkConectado2.Enabled = false;
+            this.checkConectado2.Font = new System.Drawing.Font("Lucida Handwriting", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkConectado2.Location = new System.Drawing.Point(98, 103);
+            this.checkConectado2.Name = "checkConectado2";
+            this.checkConectado2.Size = new System.Drawing.Size(157, 21);
+            this.checkConectado2.TabIndex = 8;
+            this.checkConectado2.Text = "Conectado ✓ ✖";
+            this.checkConectado2.UseVisualStyleBackColor = true;
+            // 
+            // lblEstado2
+            // 
+            this.lblEstado2.AutoSize = true;
+            this.lblEstado2.BackColor = System.Drawing.Color.Transparent;
+            this.lblEstado2.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEstado2.ForeColor = System.Drawing.Color.Red;
+            this.lblEstado2.Location = new System.Drawing.Point(143, 48);
+            this.lblEstado2.Name = "lblEstado2";
+            this.lblEstado2.Size = new System.Drawing.Size(65, 29);
+            this.lblEstado2.TabIndex = 30;
+            this.lblEstado2.Text = "OFF";
+            // 
+            // btnClose2
+            // 
+            this.btnClose2.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose2.Location = new System.Drawing.Point(202, 188);
+            this.btnClose2.Name = "btnClose2";
+            this.btnClose2.Size = new System.Drawing.Size(93, 43);
+            this.btnClose2.TabIndex = 25;
+            this.btnClose2.Text = "Close";
+            this.btnClose2.UseVisualStyleBackColor = true;
+            this.btnClose2.Click += new System.EventHandler(this.btnClose2_Click);
+            // 
+            // btnIngresar2
+            // 
+            this.btnIngresar2.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnIngresar2.Location = new System.Drawing.Point(40, 188);
+            this.btnIngresar2.Name = "btnIngresar2";
+            this.btnIngresar2.Size = new System.Drawing.Size(94, 43);
+            this.btnIngresar2.TabIndex = 17;
+            this.btnIngresar2.Text = "Ingresar";
+            this.btnIngresar2.UseVisualStyleBackColor = true;
+            this.btnIngresar2.Click += new System.EventHandler(this.btnIngresar2_Click);
+            // 
+            // barraProgreso2
+            // 
+            this.barraProgreso2.Location = new System.Drawing.Point(25, 139);
+            this.barraProgreso2.Name = "barraProgreso2";
+            this.barraProgreso2.Size = new System.Drawing.Size(289, 23);
+            this.barraProgreso2.TabIndex = 1;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(624, 585);
+            this.ClientSize = new System.Drawing.Size(911, 691);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -317,6 +415,8 @@
             this.panel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -330,22 +430,30 @@
         private System.Windows.Forms.Button btnConectar;
         private System.Windows.Forms.Label label8;
         private System.IO.Ports.SerialPort serialPort;
-        private System.Windows.Forms.CheckBox checkConectado;
-        private System.Windows.Forms.ProgressBar barraProgreso;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox checkConectado1;
+        private System.Windows.Forms.ProgressBar barraProgreso1;
+        private System.Windows.Forms.Button btnIngresar;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox comboPort;
-        private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Button btnClose1;
         private System.Windows.Forms.ComboBox comboBaud;
         private System.Windows.Forms.ComboBox comboDataBits;
         private System.Windows.Forms.ComboBox comboParityBits;
         private System.Windows.Forms.ComboBox comboStopBits;
-        private System.Windows.Forms.Label lblEstado;
+        private System.Windows.Forms.Label lblEstado1;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label lblPuerto1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label lblPuerto2;
+        private System.Windows.Forms.CheckBox checkConectado2;
+        private System.Windows.Forms.Label lblEstado2;
+        private System.Windows.Forms.Button btnClose2;
+        private System.Windows.Forms.Button btnIngresar2;
+        private System.Windows.Forms.ProgressBar barraProgreso2;
     }
 }
 

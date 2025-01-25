@@ -14,6 +14,9 @@ namespace winTwoPlays
     public partial class Form1 : Form
     {
         claseSendRecive conexion;
+        claseSendRecive conexion2;
+        frmSend accion1;
+        frmSend accion2;
         delegate void hacerMetodoSecundario(string mensaje);
         hacerMetodoSecundario delegadoMetodo;
 
@@ -33,12 +36,6 @@ namespace winTwoPlays
             comboParityBits.SelectedIndex = 0;
             comboBaud.SelectedIndex = 0;
             comboStopBits.SelectedIndex = 0;
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            
-
         }
 
         private void label6_Click(object sender, EventArgs e)
@@ -67,13 +64,24 @@ namespace winTwoPlays
                 StopBits stop_bits = (StopBits)Enum.Parse(typeof(StopBits), comboStopBits.Text);
                 Parity parity_bits = (Parity)Enum.Parse(typeof(Parity), comboParityBits.Text);
 
-                conexion = new claseSendRecive();
-                conexion.Inicializar(com_port, baud_rate, data_bits, stop_bits, parity_bits);
-
-                barraProgreso.Value = 100;
-                lblEstado.Text = "ON";
-                lblEstado.ForeColor = Color.Green;
-                checkConectado.Checked = true;
+                if (com_port.Equals("COM1"))
+                {
+                    conexion = new claseSendRecive();
+                    conexion.Inicializar(com_port, baud_rate, data_bits, stop_bits, parity_bits);
+                    barraProgreso1.Value = 100;
+                    lblEstado1.Text = "ON";
+                    lblEstado1.ForeColor = Color.Green;
+                    checkConectado1.Checked = true;
+                }
+                else
+                {
+                    conexion2 = new claseSendRecive();
+                    conexion2.Inicializar(com_port, baud_rate, data_bits, stop_bits, parity_bits);
+                    barraProgreso2.Value = 100;
+                    lblEstado2.Text = "ON";
+                    lblEstado2.ForeColor = Color.Green;
+                    checkConectado2.Checked = true;
+                }
 
             }
             catch (Exception ex)
@@ -90,17 +98,24 @@ namespace winTwoPlays
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            if (conexion.EstaAbierto())
+            if (accion1.Visible == true)
             {
-                conexion.cerrarPuerto();
-                barraProgreso.Value = 0;
-                lblEstado.Text = "OFF";
-                lblEstado.ForeColor = Color.Red;
-                checkConectado.Checked = false;
+                MessageBox.Show("El Puerto 1 Esta En Uso", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                MessageBox.Show("El Puerto No ha Sido abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (conexion.EstaAbierto())
+                {
+                    conexion.cerrarPuerto();
+                    barraProgreso1.Value = 0;
+                    lblEstado1.Text = "OFF";
+                    lblEstado1.ForeColor = Color.Red;
+                    checkConectado1.Checked = false;
+                }
+                else
+                {
+                    MessageBox.Show("El Puerto 1 No ha Sido Abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -108,12 +123,49 @@ namespace winTwoPlays
         {
             if (conexion.EstaAbierto())
             {
-                frmSend accion = new frmSend(conexion);
-                accion.Visible = true;
+                accion1 = new frmSend(conexion);
+                accion1.Visible = true;
             }
             else
             {
-                MessageBox.Show("El Puerto No ha Sido abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("El Puerto 1 No ha Sido abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnClose2_Click(object sender, EventArgs e)
+        {
+
+            if (accion2.Visible == true)
+            {
+                MessageBox.Show("El Puerto 2 Esta En Uso", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                if (conexion2.EstaAbierto())
+                {
+                    conexion2.cerrarPuerto();
+                    barraProgreso2.Value = 0;
+                    lblEstado2.Text = "OFF";
+                    lblEstado2.ForeColor = Color.Red;
+                    checkConectado2.Checked = false;
+                }
+                else
+                {
+                    MessageBox.Show("El Puerto 2 No ha Sido Abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void btnIngresar2_Click(object sender, EventArgs e)
+        {
+            if (conexion2.EstaAbierto())
+            {
+                accion2 = new frmSend(conexion2);
+                accion2.Visible = true;
+            }
+            else
+            {
+                MessageBox.Show("El Puerto 2 No ha Sido abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

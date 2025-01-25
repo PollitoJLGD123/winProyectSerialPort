@@ -62,7 +62,5 @@ namespace winTwoPlays
             int lenghtText = txtMensaje.TextLength;
             lblLenght.Text = string.Format("{0:00}", lenghtText);
         }
-
-         
     }
 }
