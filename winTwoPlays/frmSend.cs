@@ -38,7 +38,8 @@ namespace winTwoPlays
 
         private void MostrandoMensaje(string texto)
         {
-            txtConversacion.Text += $" COM2: {texto} \t\t\t";
+            string parte = conexion.puerto.PortName == "COM1" ? "COM 2" : "COM 1";
+            txtConversacion.Text += $"\n {parte}: {texto}";
         }
 
         private void btnEnviarMensaje_Click(object sender, EventArgs e)
@@ -53,7 +54,8 @@ namespace winTwoPlays
                 {
                     string texto = txtMensaje.Text.Trim();
                     conexion.enviarMensaje(texto);
-                    txtConversacion.Text += $" COM 1: {texto} \t\t\t";
+                    string parte = conexion.puerto.PortName == "COM1" ? "COM 1" : "COM 2"; 
+                    txtConversacion.Text += $"\n {parte}: {texto}";
                     txtMensaje.Text = "";
                 }
             }
@@ -109,6 +111,26 @@ namespace winTwoPlays
             }
 
             return resizedBitmap;
+        }
+
+        private void txtMensaje_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (txtMensaje.Text.Length < 0 || txtMensaje.Text.Equals(""))
+                {
+                    MessageBox.Show("Ingresa texto válido");
+                }
+                else
+                {
+                    e.SuppressKeyPress = true;
+                    string texto = txtMensaje.Text.Trim();
+                    conexion.enviarMensaje(texto);
+                    string parte = conexion.puerto.PortName == "COM1" ? "COM 1" : "COM 2";
+                    txtConversacion.Text += $"\n {parte}: {texto}";
+                    txtMensaje.Text = "";
+                }
+            }
         }
     }
 }

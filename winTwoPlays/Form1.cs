@@ -15,8 +15,8 @@ namespace winTwoPlays
     {
         claseSendRecive conexion;
         claseSendRecive conexion2;
-        frmSend accion1;
-        frmSend accion2;
+        frmSend accion1 = new frmSend();
+        frmSend accion2 = new frmSend();
         delegate void hacerMetodoSecundario(string mensaje);
         hacerMetodoSecundario delegadoMetodo;
 
@@ -83,74 +83,136 @@ namespace winTwoPlays
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            if (accion1.Visible == true)
+            try
             {
-                MessageBox.Show("El Puerto 1 Esta En Uso", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                if (conexion.EstaAbierto())
+                if (conexion == null || conexion.puerto == null)
                 {
-                    conexion.cerrarPuerto();
-                    barraProgreso1.Value = 0;
-                    lblEstado1.Text = "OFF";
-                    lblEstado1.ForeColor = Color.Red;
-                    checkConectado1.Checked = false;
+                    MessageBox.Show("CONEXION NULA O PUERTO NO ABIERTO", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    MessageBox.Show("El Puerto 1 No ha Sido Abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (accion1.Visible == true)
+                    {
+                        MessageBox.Show("El Puerto 1 Esta En Uso", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        if (conexion.EstaAbierto())
+                        {
+                            conexion.cerrarPuerto();
+                            barraProgreso1.Value = 0;
+                            lblEstado1.Text = "OFF";
+                            lblEstado1.ForeColor = Color.Red;
+                            checkConectado1.Checked = false;
+                        }
+                        else
+                        {
+                            MessageBox.Show("El Puerto 1 No ha Sido Abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
                 }
+
             }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (conexion.EstaAbierto())
+            try
             {
-                accion1 = new frmSend("COM 1",conexion);
-                accion1.Visible = true;
+                if (conexion == null || conexion.puerto == null)
+                {
+                    MessageBox.Show("CONEXION NULA O PUERTO NO ABIERTO", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    if (conexion.EstaAbierto())
+                    {
+                        accion1 = new frmSend("COM 1", conexion);
+                        accion1.Visible = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("El Puerto 1 No ha Sido abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
             }
-            else
+            catch(Exception ex)
             {
-                MessageBox.Show("El Puerto 1 No ha Sido abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnClose2_Click(object sender, EventArgs e)
         {
 
-            if (accion2.Visible == true)
+            try
             {
-                MessageBox.Show("El Puerto 2 Esta En Uso", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                if (conexion2.EstaAbierto())
+                if (conexion2 == null || conexion2.puerto == null)
                 {
-                    conexion2.cerrarPuerto();
-                    barraProgreso2.Value = 0;
-                    lblEstado2.Text = "OFF";
-                    lblEstado2.ForeColor = Color.Red;
-                    checkConectado2.Checked = false;
+                    MessageBox.Show("CONEXION NULA O PUERTO NO ABIERTO", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    MessageBox.Show("El Puerto 2 No ha Sido Abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (accion2.Visible == true)
+                    {
+                        MessageBox.Show("El Puerto 2 Esta En Uso", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        if (conexion2.EstaAbierto())
+                        {
+                            conexion2.cerrarPuerto();
+                            barraProgreso2.Value = 0;
+                            lblEstado2.Text = "OFF";
+                            lblEstado2.ForeColor = Color.Red;
+                            checkConectado2.Checked = false;
+                        }
+                        else
+                        {
+                            MessageBox.Show("El Puerto 2 No ha Sido Abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
                 }
+
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void btnIngresar2_Click(object sender, EventArgs e)
         {
-            if (conexion2.EstaAbierto())
+            try
             {
-                accion2 = new frmSend("COM 2",conexion2);
-                accion2.Visible = true;
+                if(conexion2 == null ||  conexion2.puerto == null)
+                {
+                    MessageBox.Show("CONEXION NULA O PUERTO NO ABIERTO", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    if (conexion2.EstaAbierto())
+                    {
+                        accion2 = new frmSend("COM 2", conexion2);
+                        accion2.Visible = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("El Puerto 2 No ha Sido abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
-            else
+            catch(Exception ex)
             {
-                MessageBox.Show("El Puerto 2 No ha Sido abierto Aun", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

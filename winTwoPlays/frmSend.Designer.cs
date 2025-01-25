@@ -42,7 +42,6 @@
             this.btnSeleccionarImagen = new System.Windows.Forms.Button();
             this.checkEnviado = new System.Windows.Forms.CheckBox();
             this.btnEnviarMensaje = new System.Windows.Forms.Button();
-            this.txtConversacion = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -52,12 +51,14 @@
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.txtConversacion = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.txtConversacion);
             this.panel1.Controls.Add(this.pictureBox);
             this.panel1.Controls.Add(this.lblLenght);
             this.panel1.Controls.Add(this.label9);
@@ -70,7 +71,6 @@
             this.panel1.Controls.Add(this.btnSeleccionarImagen);
             this.panel1.Controls.Add(this.checkEnviado);
             this.panel1.Controls.Add(this.btnEnviarMensaje);
-            this.panel1.Controls.Add(this.txtConversacion);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
@@ -195,15 +195,6 @@
             this.btnEnviarMensaje.UseVisualStyleBackColor = true;
             this.btnEnviarMensaje.Click += new System.EventHandler(this.btnEnviarMensaje_Click);
             // 
-            // txtConversacion
-            // 
-            this.txtConversacion.Enabled = false;
-            this.txtConversacion.Location = new System.Drawing.Point(28, 413);
-            this.txtConversacion.Multiline = true;
-            this.txtConversacion.Name = "txtConversacion";
-            this.txtConversacion.Size = new System.Drawing.Size(269, 266);
-            this.txtConversacion.TabIndex = 6;
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -242,6 +233,7 @@
             this.txtMensaje.Size = new System.Drawing.Size(276, 79);
             this.txtMensaje.TabIndex = 2;
             this.txtMensaje.TextChanged += new System.EventHandler(this.txtMensaje_TextChanged);
+            this.txtMensaje.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtMensaje_KeyDown);
             // 
             // barraProgreso
             // 
@@ -273,6 +265,15 @@
             this.pictureBox.Size = new System.Drawing.Size(200, 200);
             this.pictureBox.TabIndex = 19;
             this.pictureBox.TabStop = false;
+            // 
+            // txtConversacion
+            // 
+            this.txtConversacion.Enabled = false;
+            this.txtConversacion.Location = new System.Drawing.Point(28, 413);
+            this.txtConversacion.Name = "txtConversacion";
+            this.txtConversacion.Size = new System.Drawing.Size(276, 268);
+            this.txtConversacion.TabIndex = 20;
+            this.txtConversacion.Text = "";
             // 
             // frmSend
             // 
@@ -306,7 +307,6 @@
         private System.Windows.Forms.Button btnSeleccionarImagen;
         private System.Windows.Forms.CheckBox checkEnviado;
         private System.Windows.Forms.Button btnEnviarMensaje;
-        private System.Windows.Forms.TextBox txtConversacion;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
@@ -316,5 +316,6 @@
         private System.Windows.Forms.OpenFileDialog fileDialog;
         private System.IO.Ports.SerialPort serialPort;
         private System.Windows.Forms.PictureBox pictureBox;
+        private System.Windows.Forms.RichTextBox txtConversacion;
     }
 }

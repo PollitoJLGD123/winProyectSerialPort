@@ -13,7 +13,7 @@ namespace winTwoPlays
     public class claseSendRecive
     {
 
-        private SerialPort puerto;
+        public SerialPort puerto;
 
         public delegate void HandlerTxRx(object oo, string mensRec);
         public event HandlerTxRx LlegoMensaje;
@@ -59,6 +59,7 @@ namespace winTwoPlays
         {
             puerto = new SerialPort(nombrePuerto, baud, parity_bits, data_bits, stop_bits);
             puerto.ReceivedBytesThreshold = 1024;
+
             puerto.DataReceived += new SerialDataReceivedEventHandler(dataReceived);
             puerto.Open();
 
@@ -99,6 +100,8 @@ namespace winTwoPlays
                         break;
                 }
             }
+
+            
         }
 
         public void enviarMensaje(string message)
@@ -140,10 +143,11 @@ namespace winTwoPlays
 
         private void RecibiendoMensaje()
         {
-            string cabecera_mensaje = ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4);
+            string cabecera_mensaje = ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4); 
             //M - 000L
             //M - 00LL
             //M - 0LLL
+
             int LongMensRec = Convert.ToInt16(cabecera_mensaje);
 
             mensaje_recibir = ASCIIEncoding.UTF8.GetString(TramaRecibida, 5, LongMensRec);
