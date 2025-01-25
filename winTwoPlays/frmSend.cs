@@ -75,7 +75,7 @@ namespace winTwoPlays
                 {
                     Image imagen = Image.FromFile(fileDialog.FileName);
                      
-                    imagen_redimensionada = ResizeImage(imagen, 150, 150);
+                    imagen_redimensionada = ResizeImage(imagen, 30, 30);
 
                     pictureBox.Image = imagen_redimensionada;
                 }

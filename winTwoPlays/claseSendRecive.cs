@@ -46,12 +46,9 @@ namespace winTwoPlays
         {
             TramaEnvio = new byte[1024];
             TramCabaceraEnvio = new byte[5];
-            tramaRelleno = new byte[1024];
+            tramaRelleno = Enumerable.Repeat((byte)'@', 1024).ToArray();
 
             TramaRecibida = new byte[1024];
-
-            for (int i = 0; i <= 1023; i++)
-            { tramaRelleno[i] = 64; }
         }
 
         public void Inicializar(string nombrePuerto,int baud,int data_bits, 
@@ -63,12 +60,12 @@ namespace winTwoPlays
             puerto.DataReceived += new SerialDataReceivedEventHandler(dataReceived);
             puerto.Open();
 
-            BufferSalidaVacio = true;
+            //BufferSalidaVacio = true;
             //procesoVerificaSalida = new Thread(VerificandoSalida);
             //procesoVerificaSalida.Start();
 
-            arhivoEnviar = new classArchivo();
-            arhivoRecibir = new classArchivo();
+            //arhivoEnviar = new classArchivo();
+            //arhivoRecibir = new classArchivo();
 
             MessageBox.Show("Puerto Encendido: " + puerto.PortName);
         }
@@ -79,9 +76,9 @@ namespace winTwoPlays
             {
                 puerto.Read(TramaRecibida, 0, 1024);
 
-                string TAREA = ASCIIEncoding.UTF8.GetString(TramaRecibida, 0, 1);
+                string primer_caracter = ASCIIEncoding.UTF8.GetString(TramaRecibida, 0, 1);
 
-                switch (TAREA)
+                switch (primer_caracter)
                 {
                     case "M":
                         procesoRecibirMensaje = new Thread(RecibiendoMensaje);
@@ -100,38 +97,26 @@ namespace winTwoPlays
                         break;
                 }
             }
-
-            
         }
 
         public void enviarMensaje(string message)
         {
-            string lreal = message.Length.ToString();
-            string longMenString = "";
+            try
+            {
+                string longMessageString = ConstruirCabecera("M",message.Length);
 
-            Console.WriteLine(message);
-            Console.WriteLine(lreal);
+                TramCabaceraEnvio = ASCIIEncoding.UTF8.GetBytes(longMessageString);
 
-            TramaEnvio = ASCIIEncoding.UTF8.GetBytes(message);
+                TramaEnvio = ASCIIEncoding.UTF8.GetBytes(message);
 
-            // message = pollito123 -> 10 caracteres (pero el numero es 2 contando la longitud del numero 10
-            //                                          como string)
-
-            Console.WriteLine(TramaEnvio);
-
-            if (lreal.Length == 1)
-                longMenString = "M000" + message.Length.ToString();
-            if (lreal.Length == 2)
-                longMenString = "M00" + message.Length.ToString();
-            if (lreal.Length == 3)
-                longMenString = "M0" + message.Length.ToString();
-
-            Console.WriteLine(longMenString);
-
-            TramCabaceraEnvio = ASCIIEncoding.UTF8.GetBytes(longMenString);
-
-            procesoEnviarMensaje = new Thread(MetodoEnviando);
-            procesoEnviarMensaje.Start();
+                procesoEnviarMensaje = new Thread(MetodoEnviando);
+                procesoEnviarMensaje.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
 
         private void MetodoEnviando()
@@ -144,14 +129,9 @@ namespace winTwoPlays
         private void RecibiendoMensaje()
         {
             string cabecera_mensaje = ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4); 
-            //M - 000L
-            //M - 00LL
-            //M - 0LLL
-
             int LongMensRec = Convert.ToInt16(cabecera_mensaje);
 
             mensaje_recibir = ASCIIEncoding.UTF8.GetString(TramaRecibida, 5, LongMensRec);
-            //mensaje como tal
 
             OnLlegoMensaje();
 
@@ -182,6 +162,12 @@ namespace winTwoPlays
         public void cerrarPuerto()
         {
             puerto.Close();
+        }
+
+        private string ConstruirCabecera(string identificador, int longitud)
+        {
+            return identificador + longitud.ToString("D4"); 
+            // formato de 4 dig 0112
         }
 
     }
