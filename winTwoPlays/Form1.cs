@@ -38,21 +38,6 @@ namespace winTwoPlays
             comboStopBits.SelectedIndex = 0;
         }
 
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnEnviarMensaje_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void btnSeleccionarImagen_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnEnviarImagen_Click(object sender, EventArgs e)
         {
 

@@ -36,7 +36,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.btnEnviarImagen = new System.Windows.Forms.Button();
-            this.lblImagen = new System.Windows.Forms.Label();
             this.btnConstruir = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -52,17 +51,19 @@
             this.lblTitulo = new System.Windows.Forms.Label();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
+            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.pictureBox);
             this.panel1.Controls.Add(this.lblLenght);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.btnEnviarImagen);
-            this.panel1.Controls.Add(this.lblImagen);
             this.panel1.Controls.Add(this.btnConstruir);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label5);
@@ -128,14 +129,6 @@
             this.btnEnviarImagen.TabIndex = 14;
             this.btnEnviarImagen.Text = "Enviar Imagen";
             this.btnEnviarImagen.UseVisualStyleBackColor = true;
-            // 
-            // lblImagen
-            // 
-            this.lblImagen.Image = ((System.Drawing.Image)(resources.GetObject("lblImagen.Image")));
-            this.lblImagen.Location = new System.Drawing.Point(725, 176);
-            this.lblImagen.Name = "lblImagen";
-            this.lblImagen.Size = new System.Drawing.Size(203, 198);
-            this.lblImagen.TabIndex = 13;
             // 
             // btnConstruir
             // 
@@ -272,6 +265,15 @@
             // 
             this.fileDialog.FileName = "fileDialog";
             // 
+            // pictureBox
+            // 
+            this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox.Location = new System.Drawing.Point(715, 180);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(200, 200);
+            this.pictureBox.TabIndex = 19;
+            this.pictureBox.TabStop = false;
+            // 
             // frmSend
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -285,6 +287,7 @@
             this.Text = "frmSend";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -297,7 +300,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btnEnviarImagen;
-        private System.Windows.Forms.Label lblImagen;
         private System.Windows.Forms.Button btnConstruir;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
@@ -313,5 +315,6 @@
         private System.Windows.Forms.Label lblTitulo;
         private System.Windows.Forms.OpenFileDialog fileDialog;
         private System.IO.Ports.SerialPort serialPort;
+        private System.Windows.Forms.PictureBox pictureBox;
     }
 }
