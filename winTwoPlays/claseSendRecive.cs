@@ -10,6 +10,7 @@ using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using System.Collections;
 
 namespace winTwoPlays
 {
@@ -69,7 +70,7 @@ namespace winTwoPlays
             puerto = new SerialPort(nombrePuerto, baud, parity_bits, data_bits, stop_bits);
             puerto.ReceivedBytesThreshold = 1024;
             puerto.ReadBufferSize = 4096; // Tamaño del buffer de lectura
-            puerto.WriteBufferSize = 4096; // Tamaño del buffer de escritura
+            puerto.WriteBufferSize = 2048; // Tamaño del buffer de escritura
 
             puerto.DataReceived += new SerialDataReceivedEventHandler(dataReceived);
             puerto.Open();
@@ -84,6 +85,7 @@ namespace winTwoPlays
 
         private void dataReceived(object o, SerialDataReceivedEventArgs sd)
         {
+            Console.WriteLine("data recibida: " + puerto.BytesToRead);
             if (puerto.BytesToRead >= 1024)
             {
                 puerto.Read(TramaRecibida, 0, 1024);
@@ -184,10 +186,11 @@ namespace winTwoPlays
         {
             try
             {
-                byte[] bytesImagen = File.ReadAllBytes("E:/Probando/Enviar/foto.jpg");
-                archivoEnviar = new classArchivo("E:/Probando/Enviar/foto.jpg", bytesImagen, 0);
+                Console.WriteLine("inicio proceso de envio: " + rutita);
+                byte[] bytesImagen = File.ReadAllBytes(rutita);
+                archivoEnviar = new classArchivo(rutita, bytesImagen, 0);
 
-                enviarInformacion();
+                enviarInformacion(); //manda la primera trama con cabecera I (activa data recived)
 
                 procesoEnvioArchivo = new Thread(EnviandoArchivo);
                 procesoEnvioArchivo.Start();
@@ -197,13 +200,63 @@ namespace winTwoPlays
                 MessageBox.Show(ex.Message);
             }
         }
+        private void enviarInformacion()
+        {
+            try
+            {
+                int tama = archivoEnviar.bytes.Length;
+
+                string extension = Path.GetExtension(archivoEnviar.Nombre); //.txt 3
+
+                //"I0000120 - 4 - .txt
+
+                int tama_virtual = Convert.ToString(tama).Length;
+                string info = ConstruirCabecera("I", tama, 7);
+
+                int tama_extension = extension.Length;
+
+                info += Convert.ToString(tama_extension) + extension;
+
+                TramaCabeceraInfo = ASCIIEncoding.UTF8.GetBytes(info);
+
+                TramaInformacion = Enumerable.Repeat((byte)'@', 1024).ToArray();
+
+                Array.Copy(TramaCabeceraInfo, 0, TramaInformacion, 0, info.Length);
+
+
+                Thread procesoEnviarInformacion = new Thread(() =>
+                {
+                    try
+                    {
+                        lock (puertoLock)
+                        {
+                            puerto.Write(TramaInformacion, 0, TramaInformacion.Length);
+                            Console.WriteLine("trama de informacion enviada");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error en enviandoInformacion: {ex.Message}");
+                    }
+                });
+
+                procesoEnviarInformacion.Start();
+                enviarInformacionCompleta.Set();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("error: "+ ex.Message);
+            }
+        }
 
         private void EnviandoArchivo()
         {
             try
             {
                 enviarInformacionCompleta.WaitOne();
-                
+                Console.WriteLine("enviando datos de archivo");
+
+
                 byte[] TramCabaceraEnvioArchivo = new byte[5];
 
                 TramCabaceraEnvioArchivo = ASCIIEncoding.UTF8.GetBytes("A0001");
@@ -226,6 +279,7 @@ namespace winTwoPlays
                     {
                         puerto.Write(TramCabaceraEnvioArchivo, 0, 5); // "A0001"
                         puerto.Write(TramaEnvio, 0, 1019);            // 012345
+                        Console.WriteLine("trama enviada " + TramaEnvio.Length + System.Text.Encoding.ASCII.GetString(TramaEnvio));
                     }
                 }
                 MessageBox.Show("Archivo enviado correctamente.");
@@ -241,7 +295,7 @@ namespace winTwoPlays
         {
             try
             {
-
+                Console.WriteLine("construccion del archivo en base a la 1era trama");
                 string cabecera_info = ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 7); //"I0021101 2 .TXT
 
                 int longitud_extension = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 8, 1));
@@ -252,15 +306,16 @@ namespace winTwoPlays
 
                 byte[] bytes = new byte[peso_imagen];
 
-                Console.WriteLine("Peso imagen : "+ peso_imagen);
 
-                String ruta_temp = $"E:/Probando/Recibir/archivo{extension}";
+                String ruta_temp = $"C:/PRUEBA/archivo{extension}";
 
-                FlujoArchivoRecibir = new FileStream("E:/Probando/Recibir/archivo1.jpg", FileMode.Create, FileAccess.Write);
+                FlujoArchivoRecibir = new FileStream(ruta_temp, FileMode.Create, FileAccess.Write);
                 EscribiendoArchivo = new BinaryWriter(FlujoArchivoRecibir);
-                archivoRecibir = new classArchivo("E:/Probando/Recibir/archivo1.jpg", bytes, 0);
+                archivoRecibir = new classArchivo(ruta_temp, bytes, 0);
+                Console.WriteLine("imagen construida " + "peso: " + peso_imagen);
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -270,15 +325,16 @@ namespace winTwoPlays
         {
             try
             {
+                Console.WriteLine("construyendo archivo " + archivoRecibir.Nombre);
                 int bytesRestantes = archivoRecibir.bytes.Length - archivoRecibir.Avance;
-                Console.WriteLine(bytesRestantes);
-
+                Console.WriteLine("bytes faltantes: " + bytesRestantes);
+                Console.WriteLine("trama recibida: " + System.Text.Encoding.ASCII.GetString(TramaRecibida));
                 if (bytesRestantes > 1019)
                 {
                     EscribiendoArchivo.Write(TramaRecibida, 5, 1019);
                     archivoRecibir.Avance += 1019;
 
-                    Console.WriteLine(archivoRecibir.Avance);
+                    Console.WriteLine("avance de la imagen: " + archivoRecibir.Avance);
                 }
                 else
                 {
@@ -286,9 +342,9 @@ namespace winTwoPlays
                     EscribiendoArchivo.Write(TramaRecibida, 5, bytesRestantes);
                     archivoRecibir.Avance += bytesRestantes;
 
-                    Console.WriteLine(archivoRecibir.Avance);
+                    Console.WriteLine("avance de la imagen: " + archivoRecibir.Avance);
 
-                    MessageBox.Show("Se acabo de construir el archivo");
+                    Console.WriteLine("Se acabo de construir el archivo");
                     EscribiendoArchivo.Close();
                     FlujoArchivoRecibir.Close();
                 }
@@ -303,54 +359,7 @@ namespace winTwoPlays
             }
         }
 
-        private void enviarInformacion()
-        {
-            try
-            {
-                int tama = archivoEnviar.bytes.Length;
-
-                string extension = Path.GetExtension(archivoEnviar.Nombre); //.txt 3
-
-                //"I0000120 - 4 - .txt
-
-                int tama_virtual = Convert.ToString(tama).Length;
-                string info = ConstruirCabecera("I", tama, 7);
-
-                int tama_extension = extension.Length;
-
-                info += Convert.ToString(tama_extension) + extension; 
-
-                TramaCabeceraInfo = ASCIIEncoding.UTF8.GetBytes(info);
-
-                TramaInformacion = Enumerable.Repeat((byte)'@', 1024).ToArray(); 
-
-                Array.Copy(TramaCabeceraInfo, 0, TramaInformacion, 0, info.Length);
-
-
-                Thread procesoEnviarInformacion = new Thread(() =>
-                {
-                    try
-                    {
-                        lock (puertoLock)
-                        {
-                            puerto.Write(TramaInformacion, 0, TramaInformacion.Length);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error en enviandoInformacion: {ex.Message}");
-                    }
-                });
-
-                procesoEnviarInformacion.Start();
-                enviarInformacionCompleta.Set();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
+        
         public Boolean EstaAbierto()
         {
             return puerto.IsOpen;
