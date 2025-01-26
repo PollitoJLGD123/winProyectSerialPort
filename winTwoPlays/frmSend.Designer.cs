@@ -86,10 +86,10 @@
             // txtRuta
             // 
             this.txtRuta.Enabled = false;
-            this.txtRuta.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRuta.Location = new System.Drawing.Point(741, 196);
+            this.txtRuta.Font = new System.Drawing.Font("Adobe Song Std L", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRuta.Location = new System.Drawing.Point(688, 196);
             this.txtRuta.Name = "txtRuta";
-            this.txtRuta.Size = new System.Drawing.Size(174, 153);
+            this.txtRuta.Size = new System.Drawing.Size(270, 153);
             this.txtRuta.TabIndex = 21;
             this.txtRuta.Text = "";
             // 
@@ -134,7 +134,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(343, 559);
+            this.label7.Location = new System.Drawing.Point(337, 551);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(161, 28);
             this.label7.TabIndex = 15;
@@ -143,7 +143,7 @@
             // btnEnviarImagen
             // 
             this.btnEnviarImagen.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEnviarImagen.Location = new System.Drawing.Point(735, 403);
+            this.btnEnviarImagen.Location = new System.Drawing.Point(730, 382);
             this.btnEnviarImagen.Name = "btnEnviarImagen";
             this.btnEnviarImagen.Size = new System.Drawing.Size(180, 43);
             this.btnEnviarImagen.TabIndex = 14;
@@ -155,7 +155,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(728, 144);
+            this.label6.Location = new System.Drawing.Point(693, 144);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(187, 28);
             this.label6.TabIndex = 11;
@@ -191,9 +191,9 @@
             this.checkEnviado.ForeColor = System.Drawing.Color.Red;
             this.checkEnviado.Location = new System.Drawing.Point(720, 643);
             this.checkEnviado.Name = "checkEnviado";
-            this.checkEnviado.Size = new System.Drawing.Size(207, 21);
+            this.checkEnviado.Size = new System.Drawing.Size(205, 21);
             this.checkEnviado.TabIndex = 8;
-            this.checkEnviado.Text = "Imagen Enviada ✓ ✖";
+            this.checkEnviado.Text = "Archivo Enviado ✓ ✖";
             this.checkEnviado.UseVisualStyleBackColor = false;
             // 
             // btnEnviarMensaje
@@ -223,9 +223,9 @@
             this.label3.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(683, 480);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(265, 28);
+            this.label3.Size = new System.Drawing.Size(261, 28);
             this.label3.TabIndex = 4;
-            this.label3.Text = "Estado de Envio de Imagen:";
+            this.label3.Text = "Estado de Envio de Archivo:";
             // 
             // label2
             // 
@@ -249,7 +249,7 @@
             // 
             // barraProgreso
             // 
-            this.barraProgreso.Location = new System.Drawing.Point(688, 544);
+            this.barraProgreso.Location = new System.Drawing.Point(688, 535);
             this.barraProgreso.Name = "barraProgreso";
             this.barraProgreso.Size = new System.Drawing.Size(270, 23);
             this.barraProgreso.TabIndex = 1;
@@ -273,7 +273,7 @@
             // 
             this.txtRutaEnviada.Enabled = false;
             this.txtRutaEnviada.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRutaEnviada.Location = new System.Drawing.Point(348, 602);
+            this.txtRutaEnviada.Location = new System.Drawing.Point(331, 602);
             this.txtRutaEnviada.Name = "txtRutaEnviada";
             this.txtRutaEnviada.Size = new System.Drawing.Size(301, 79);
             this.txtRutaEnviada.TabIndex = 22;
