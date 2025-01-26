@@ -32,13 +32,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSend));
             this.panel1 = new System.Windows.Forms.Panel();
             this.txtConversacion = new System.Windows.Forms.RichTextBox();
-            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.lblLenght = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.btnEnviarImagen = new System.Windows.Forms.Button();
-            this.btnConstruir = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.btnSeleccionarImagen = new System.Windows.Forms.Button();
@@ -52,20 +50,19 @@
             this.lblTitulo = new System.Windows.Forms.Label();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
+            this.txtRuta = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.txtRuta);
             this.panel1.Controls.Add(this.txtConversacion);
-            this.panel1.Controls.Add(this.pictureBox);
             this.panel1.Controls.Add(this.lblLenght);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.btnEnviarImagen);
-            this.panel1.Controls.Add(this.btnConstruir);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.btnSeleccionarImagen);
@@ -91,15 +88,6 @@
             this.txtConversacion.TabIndex = 20;
             this.txtConversacion.Text = "";
             // 
-            // pictureBox
-            // 
-            this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox.Location = new System.Drawing.Point(715, 180);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(200, 200);
-            this.pictureBox.TabIndex = 19;
-            this.pictureBox.TabStop = false;
-            // 
             // lblLenght
             // 
             this.lblLenght.AutoSize = true;
@@ -123,7 +111,7 @@
             // label8
             // 
             this.label8.Image = ((System.Drawing.Image)(resources.GetObject("label8.Image")));
-            this.label8.Location = new System.Drawing.Point(389, 323);
+            this.label8.Location = new System.Drawing.Point(405, 357);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(197, 176);
             this.label8.TabIndex = 16;
@@ -132,7 +120,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(407, 563);
+            this.label7.Location = new System.Drawing.Point(409, 604);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(161, 28);
             this.label7.TabIndex = 15;
@@ -149,41 +137,30 @@
             this.btnEnviarImagen.UseVisualStyleBackColor = true;
             this.btnEnviarImagen.Click += new System.EventHandler(this.btnEnviarImagen_Click);
             // 
-            // btnConstruir
-            // 
-            this.btnConstruir.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConstruir.Location = new System.Drawing.Point(402, 612);
-            this.btnConstruir.Name = "btnConstruir";
-            this.btnConstruir.Size = new System.Drawing.Size(184, 38);
-            this.btnConstruir.TabIndex = 12;
-            this.btnConstruir.Text = "Construir Imagen";
-            this.btnConstruir.UseVisualStyleBackColor = true;
-            this.btnConstruir.Click += new System.EventHandler(this.btnConstruir_Click);
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(703, 132);
+            this.label6.Location = new System.Drawing.Point(728, 144);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(212, 28);
+            this.label6.Size = new System.Drawing.Size(187, 28);
             this.label6.TabIndex = 11;
-            this.label6.Text = "Imagen Seleccionada:";
+            this.label6.Text = "Ruta Seleccionada:";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(343, 144);
+            this.label5.Location = new System.Drawing.Point(371, 144);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(306, 28);
+            this.label5.Size = new System.Drawing.Size(261, 28);
             this.label5.TabIndex = 10;
-            this.label5.Text = "Selecciona una Imagen a Enviar";
+            this.label5.Text = "Selecciona Archivo a Enviar";
             // 
             // btnSeleccionarImagen
             // 
             this.btnSeleccionarImagen.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSeleccionarImagen.Location = new System.Drawing.Point(376, 197);
+            this.btnSeleccionarImagen.Location = new System.Drawing.Point(389, 210);
             this.btnSeleccionarImagen.Name = "btnSeleccionarImagen";
             this.btnSeleccionarImagen.Size = new System.Drawing.Size(226, 43);
             this.btnSeleccionarImagen.TabIndex = 9;
@@ -276,6 +253,15 @@
             // 
             this.fileDialog.FileName = "fileDialog";
             // 
+            // txtRuta
+            // 
+            this.txtRuta.Enabled = false;
+            this.txtRuta.Location = new System.Drawing.Point(741, 196);
+            this.txtRuta.Name = "txtRuta";
+            this.txtRuta.Size = new System.Drawing.Size(174, 153);
+            this.txtRuta.TabIndex = 21;
+            this.txtRuta.Text = "";
+            // 
             // frmSend
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -287,9 +273,9 @@
             this.MaximizeBox = false;
             this.Name = "frmSend";
             this.Text = "frmSend";
+            this.Load += new System.EventHandler(this.frmSend_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -302,7 +288,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btnEnviarImagen;
-        private System.Windows.Forms.Button btnConstruir;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnSeleccionarImagen;
@@ -316,7 +301,7 @@
         private System.Windows.Forms.Label lblTitulo;
         private System.Windows.Forms.OpenFileDialog fileDialog;
         private System.IO.Ports.SerialPort serialPort;
-        private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.RichTextBox txtConversacion;
+        private System.Windows.Forms.RichTextBox txtRuta;
     }
 }

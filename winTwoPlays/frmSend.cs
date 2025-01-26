@@ -18,6 +18,7 @@ namespace winTwoPlays
         Image imagen_redimensionada;
         delegate void hacerMetodoSecundario(string mensaje);
         hacerMetodoSecundario delegadoMetodo;
+        String rutaArchivo;
 
         byte[] bytesImagen;
         classArchivo archivo;
@@ -75,14 +76,13 @@ namespace winTwoPlays
 
             try
             {
-                fileDialog.Filter = "Archivos de imagen (*.jpg; *.jpeg; *.png; *.bmp)|*.jpg;*.jpeg;*.png;*.bmp";
+                fileDialog.Filter = "Todos los archivos (*.*)|*.*"; 
+                fileDialog.Title = "Seleccionar un archivo";
                 if (fileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    Image imagen = Image.FromFile(fileDialog.FileName);
-                     
-                    imagen_redimensionada = ResizeImage(imagen, 80, 80);
+                    rutaArchivo = fileDialog.FileName;
 
-                    pictureBox.Image = imagen_redimensionada;
+                    txtRuta.Text = "\n\n\n" + rutaArchivo;
                 }
             }
             catch (Exception ex)
@@ -100,22 +100,6 @@ namespace winTwoPlays
         {
             int lenghtText = txtMensaje.TextLength;
             lblLenght.Text = string.Format("{0:00}", lenghtText);
-        }
-
-
-        private Image ResizeImage(Image originalImage, int width, int height)
-        {
-            Bitmap resizedBitmap = new Bitmap(width, height);
-            using (Graphics graphics = Graphics.FromImage(resizedBitmap))
-            {
-                graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-
-                graphics.DrawImage(originalImage, 0, 0, width, height);
-            }
-
-            return resizedBitmap;
         }
 
         private void txtMensaje_KeyDown(object sender, KeyEventArgs e)
@@ -142,11 +126,16 @@ namespace winTwoPlays
         {
             try
             {
-                conexion.IniciaEnvioArchivo(imagen_redimensionada);
+                conexion.IniciaEnvioArchivo(rutaArchivo);
             }catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void frmSend_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
