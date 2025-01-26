@@ -297,11 +297,11 @@ namespace winTwoPlays
             try
             {
 
-                string cabecera_info = ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 7); //"I0011010 - 011 - pollito.txt
+                string cabecera_info = ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 10); //"I0123456789 - 011 - pollito.txt
 
-                int longitud_extension = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 8, 3));
+                int longitud_extension = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 11, 3));
 
-                string name_archivo = ASCIIEncoding.UTF8.GetString(TramaRecibida, 11, longitud_extension);
+                string name_archivo = ASCIIEncoding.UTF8.GetString(TramaRecibida, 14, longitud_extension);
 
                 int peso_imagen = Convert.ToInt32(cabecera_info);
 
@@ -309,7 +309,7 @@ namespace winTwoPlays
 
                 Console.WriteLine("Peso imagen : "+ peso_imagen);
 
-                String ruta_temp = $"E:/Probando/Recibir/{name_archivo}";
+                String ruta_temp = $"D:/ZZZ{name_archivo}";
 
                 if (File.Exists(ruta_temp))
                 {
@@ -359,7 +359,7 @@ namespace winTwoPlays
             }
         }
 
-        private void enviarInformacion()
+        private void enviarInformacion()//  I (TIPO)- 0123456789 (TAMAÑO) - RELLENO
         {
             try
             {
@@ -373,11 +373,11 @@ namespace winTwoPlays
                 //"I0000120 - 4 - .txt
 
                 int tama_virtual = Convert.ToString(tama).Length;
-                string info = ConstruirCabecera("I", tama, 7);
+                string info = ConstruirCabecera("I", tama, 10);
 
-                int tama_extension = palabra_extension.Length;
+                int tama_extension = palabra_extension.Length;//TAMAÑO DE LA EXTENSION
 
-                info += tama_extension.ToString("D3") + palabra_extension; //"I0120000" - "011" - "pollito.txt"
+                info += tama_extension.ToString("D3") + palabra_extension; //"I0123456789" - "011" - "pollito.txt"
                 
                 //info - 011 - pollito.txt
 

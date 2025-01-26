@@ -9,3 +9,14 @@ E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlay
 E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.exe
 E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.pdb
 E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.frmSend.resources
+D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\bin\Debug\winTwoPlays.exe.config
+D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\bin\Debug\winTwoPlays.exe
+D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\bin\Debug\winTwoPlays.pdb
+D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\obj\Debug\winTwoPlays.csproj.AssemblyReference.cache
+D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\obj\Debug\winTwoPlays.Form1.resources
+D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\obj\Debug\winTwoPlays.frmSend.resources
+D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\obj\Debug\winTwoPlays.Properties.Resources.resources
+D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\obj\Debug\winTwoPlays.csproj.GenerateResource.cache
+D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\obj\Debug\winTwoPlays.csproj.CoreCompileInputs.cache
+D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\obj\Debug\winTwoPlays.exe
+D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\obj\Debug\winTwoPlays.pdb
