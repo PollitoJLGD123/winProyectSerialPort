@@ -49,8 +49,6 @@ namespace winTwoPlays
 
         String mensaje_recibir;
 
-        private String ruta_archivo;
-
         private readonly object puertoLock = new object();
 
         private ManualResetEvent enviarInformacionCompleta = new ManualResetEvent(false);
@@ -263,6 +261,11 @@ namespace winTwoPlays
                 Console.WriteLine("Peso imagen : "+ peso_imagen);
 
                 String ruta_temp = $"E:/Probando/Recibir/archivo_8{extension}";
+
+                if (File.Exists(ruta_temp))
+                {
+                    File.Delete(ruta_temp);
+                }
 
                 FlujoArchivoRecibir = new FileStream(ruta_temp, FileMode.Create, FileAccess.Write);
                 EscribiendoArchivo = new BinaryWriter(FlujoArchivoRecibir);
