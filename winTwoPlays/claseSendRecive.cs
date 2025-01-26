@@ -68,8 +68,8 @@ namespace winTwoPlays
         {
             puerto = new SerialPort(nombrePuerto, baud, parity_bits, data_bits, stop_bits);
             puerto.ReceivedBytesThreshold = 1024;
-            puerto.ReadBufferSize = 4096; // Tamaño del buffer de lectura
-            puerto.WriteBufferSize = 4096; // Tamaño del buffer de escritura
+            //puerto.ReadBufferSize = 4096; // Tamaño del buffer de lectura
+            //puerto.WriteBufferSize = 4096; // Tamaño del buffer de escritura
 
             puerto.DataReceived += new SerialDataReceivedEventHandler(dataReceived);
             puerto.Open();
@@ -84,11 +84,16 @@ namespace winTwoPlays
 
         private void dataReceived(object o, SerialDataReceivedEventArgs sd)
         {
+
             if (puerto.BytesToRead >= 1024)
             {
+                Console.WriteLine("Cantidad de lectura" + puerto.BytesToRead);
+
                 puerto.Read(TramaRecibida, 0, 1024);
 
                 string primer_caracter = ASCIIEncoding.UTF8.GetString(TramaRecibida, 0, 1);
+
+                Console.WriteLine("Sobra esto" + puerto.BytesToRead);
 
                 switch (primer_caracter)
                 {
@@ -96,10 +101,8 @@ namespace winTwoPlays
                         procesoRecibirMensaje = new Thread(RecibiendoMensaje);
                         procesoRecibirMensaje.Start();
                         break;
-
                     case "A":
-                        procesoConstruyeArchivo = new Thread(ConstruirArchivo);
-                        procesoConstruyeArchivo.Start();
+                        ConstruirArchivo();
                         break;
                     case "I":
                         InicioConstruirArchivo();
@@ -152,7 +155,7 @@ namespace winTwoPlays
             try
             { // 0 1 2 3 4 5 6 7 8
                 string cabecera_mensaje = ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4);
-                int LongMensRec = Convert.ToInt16(cabecera_mensaje);
+                int LongMensRec = Convert.ToInt32(cabecera_mensaje);
 
                 mensaje_recibir = ASCIIEncoding.UTF8.GetString(TramaRecibida, 5, LongMensRec);
 
@@ -184,8 +187,8 @@ namespace winTwoPlays
         {
             try
             {
-                byte[] bytesImagen = File.ReadAllBytes("E:/Probando/Enviar/foto.jpg");
-                archivoEnviar = new classArchivo("E:/Probando/Enviar/foto.jpg", bytesImagen, 0);
+                byte[] bytesImagen = File.ReadAllBytes(rutita);
+                archivoEnviar = new classArchivo(rutita, bytesImagen, 0);
 
                 enviarInformacion();
 
@@ -202,6 +205,7 @@ namespace winTwoPlays
         {
             try
             {
+                int Z = 0;
                 enviarInformacionCompleta.WaitOne();
                 
                 byte[] TramCabaceraEnvioArchivo = new byte[5];
@@ -214,20 +218,24 @@ namespace winTwoPlays
                 {
                     int size = Math.Min(chunkSize, archivoEnviar.bytes.Length - i);
 
-                    byte[] TramaEnvio = Enumerable.Repeat((byte)'@', chunkSize).ToArray(); ;
+                    byte[] TramaEnvio2 = Enumerable.Repeat((byte)'@', chunkSize).ToArray();
 
-                    Array.Copy(archivoEnviar.bytes, i, TramaEnvio, 0, size);
+                    Array.Copy(archivoEnviar.bytes, i, TramaEnvio2, 0, size);
 
                     while (BufferSalidaVacio == false)
                     {//esperamos
                     }
-
                     lock (puertoLock)
                     {
                         puerto.Write(TramCabaceraEnvioArchivo, 0, 5); // "A0001"
-                        puerto.Write(TramaEnvio, 0, 1019);            // 012345
+                        puerto.Write(TramaEnvio2, 0, 1019);            // 012345
+
+                        Z += puerto.BytesToRead;
                     }
+
+                    Console.WriteLine("Dentro:" + Z);
                 }
+                Console.WriteLine("Fuera: " + Z);
                 MessageBox.Show("Archivo enviado correctamente.");
 
             }
@@ -254,11 +262,11 @@ namespace winTwoPlays
 
                 Console.WriteLine("Peso imagen : "+ peso_imagen);
 
-                String ruta_temp = $"E:/Probando/Recibir/archivo{extension}";
+                String ruta_temp = $"E:/Probando/Recibir/archivo_8{extension}";
 
-                FlujoArchivoRecibir = new FileStream("E:/Probando/Recibir/archivo1.jpg", FileMode.Create, FileAccess.Write);
+                FlujoArchivoRecibir = new FileStream(ruta_temp, FileMode.Create, FileAccess.Write);
                 EscribiendoArchivo = new BinaryWriter(FlujoArchivoRecibir);
-                archivoRecibir = new classArchivo("E:/Probando/Recibir/archivo1.jpg", bytes, 0);
+                archivoRecibir = new classArchivo(ruta_temp, bytes, 0);
             }
             catch(Exception ex)
             {
@@ -271,22 +279,16 @@ namespace winTwoPlays
             try
             {
                 int bytesRestantes = archivoRecibir.bytes.Length - archivoRecibir.Avance;
-                Console.WriteLine(bytesRestantes);
 
                 if (bytesRestantes > 1019)
                 {
                     EscribiendoArchivo.Write(TramaRecibida, 5, 1019);
                     archivoRecibir.Avance += 1019;
-
-                    Console.WriteLine(archivoRecibir.Avance);
                 }
                 else
                 {
-                    Console.WriteLine("se quedoo");
                     EscribiendoArchivo.Write(TramaRecibida, 5, bytesRestantes);
                     archivoRecibir.Avance += bytesRestantes;
-
-                    Console.WriteLine(archivoRecibir.Avance);
 
                     MessageBox.Show("Se acabo de construir el archivo");
                     EscribiendoArchivo.Close();
@@ -333,7 +335,7 @@ namespace winTwoPlays
                     {
                         lock (puertoLock)
                         {
-                            puerto.Write(TramaInformacion, 0, TramaInformacion.Length);
+                            puerto.Write(TramaInformacion, 0, 1024);
                         }
                     }
                     catch (Exception ex)
