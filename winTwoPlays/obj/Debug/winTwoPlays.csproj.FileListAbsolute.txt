@@ -9,3 +9,14 @@ E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlay
 E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.exe
 E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.pdb
 E:\CURSOS\C#\Redes y Comunicaciones\winTwoPlays\winTwoPlays\obj\Debug\winTwoPlays.frmSend.resources
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\bin\Debug\winTwoPlays.exe.config
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\bin\Debug\winTwoPlays.exe
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\bin\Debug\winTwoPlays.pdb
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.csproj.AssemblyReference.cache
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.Form1.resources
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.frmSend.resources
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.Properties.Resources.resources
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.csproj.GenerateResource.cache
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.csproj.CoreCompileInputs.cache
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.exe
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.pdb
