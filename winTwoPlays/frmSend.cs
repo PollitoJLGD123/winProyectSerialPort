@@ -82,7 +82,7 @@ namespace winTwoPlays
                 {
                     rutaArchivo = fileDialog.FileName;
 
-                    txtRuta.Text = "\n\n\n" + rutaArchivo;
+                    txtRuta.Text = "\n" + rutaArchivo;
                 }
             }
             catch (Exception ex)
@@ -126,7 +126,14 @@ namespace winTwoPlays
         {
             try
             {
-                conexion.IniciaEnvioArchivo(rutaArchivo);
+                if (txtRuta.Text.Equals(""))
+                {
+                    MessageBox.Show("Elige un archivo primero");
+                }
+                else
+                {
+                    conexion.IniciaEnvioArchivo(rutaArchivo);
+                }
             }catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);

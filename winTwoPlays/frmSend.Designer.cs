@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSend));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txtRuta = new System.Windows.Forms.RichTextBox();
             this.txtConversacion = new System.Windows.Forms.RichTextBox();
             this.lblLenght = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -50,7 +51,6 @@
             this.lblTitulo = new System.Windows.Forms.Label();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
-            this.txtRuta = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -78,6 +78,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(976, 712);
             this.panel1.TabIndex = 1;
+            // 
+            // txtRuta
+            // 
+            this.txtRuta.Enabled = false;
+            this.txtRuta.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRuta.Location = new System.Drawing.Point(741, 196);
+            this.txtRuta.Name = "txtRuta";
+            this.txtRuta.Size = new System.Drawing.Size(174, 153);
+            this.txtRuta.TabIndex = 21;
+            this.txtRuta.Text = "";
             // 
             // txtConversacion
             // 
@@ -120,7 +130,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(409, 604);
+            this.label7.Location = new System.Drawing.Point(421, 604);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(161, 28);
             this.label7.TabIndex = 15;
@@ -133,7 +143,7 @@
             this.btnEnviarImagen.Name = "btnEnviarImagen";
             this.btnEnviarImagen.Size = new System.Drawing.Size(180, 43);
             this.btnEnviarImagen.TabIndex = 14;
-            this.btnEnviarImagen.Text = "Enviar Imagen";
+            this.btnEnviarImagen.Text = "Enviar Archivo";
             this.btnEnviarImagen.UseVisualStyleBackColor = true;
             this.btnEnviarImagen.Click += new System.EventHandler(this.btnEnviarImagen_Click);
             // 
@@ -164,7 +174,7 @@
             this.btnSeleccionarImagen.Name = "btnSeleccionarImagen";
             this.btnSeleccionarImagen.Size = new System.Drawing.Size(226, 43);
             this.btnSeleccionarImagen.TabIndex = 9;
-            this.btnSeleccionarImagen.Text = "Seleccionar Imagen";
+            this.btnSeleccionarImagen.Text = "Seleccionar Archivo";
             this.btnSeleccionarImagen.UseVisualStyleBackColor = true;
             this.btnSeleccionarImagen.Click += new System.EventHandler(this.btnSeleccionarImagen_Click);
             // 
@@ -252,15 +262,6 @@
             // fileDialog
             // 
             this.fileDialog.FileName = "fileDialog";
-            // 
-            // txtRuta
-            // 
-            this.txtRuta.Enabled = false;
-            this.txtRuta.Location = new System.Drawing.Point(741, 196);
-            this.txtRuta.Name = "txtRuta";
-            this.txtRuta.Size = new System.Drawing.Size(174, 153);
-            this.txtRuta.TabIndex = 21;
-            this.txtRuta.Text = "";
             // 
             // frmSend
             // 

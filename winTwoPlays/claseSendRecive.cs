@@ -136,9 +136,12 @@ namespace winTwoPlays
         {
             try
             {
-                puerto.Write(TramCabaceraEnvio, 0, 5);
-                puerto.Write(TramaEnvio, 0, TramaEnvio.Length);
-                puerto.Write(tramaRelleno, 0, 1019 - TramaEnvio.Length);
+                lock (puertoLock)
+                {
+                    puerto.Write(TramCabaceraEnvio, 0, 5);
+                    puerto.Write(TramaEnvio, 0, TramaEnvio.Length);
+                    puerto.Write(tramaRelleno, 0, 1019 - TramaEnvio.Length);
+                }
             }
             catch(Exception ex)
             {
