@@ -21,6 +21,16 @@ namespace winTwoPlays
         public delegate void HandlerTxRx(object oo, string mensRec);
         public event HandlerTxRx LlegoMensaje;
 
+        public delegate void DelegadoLLegoArchivo(object oo,Boolean llego);
+        public event DelegadoLLegoArchivo LlegoImagen;
+
+        public delegate void DelegadoPorcentaje(object oo, float cantidad, float bytes_actuales, float total);
+        public event DelegadoPorcentaje PorcentajeImagen;
+
+        public delegate void DelegadoAvisarArchivo(object oo, string ruta);
+        public event DelegadoAvisarArchivo AvisarImagen;
+
+
         byte[] TramaEnvio;
         byte[] TramCabaceraEnvio;
         byte[] tramaRelleno;
@@ -175,6 +185,25 @@ namespace winTwoPlays
                 LlegoMensaje(this, mensaje_recibir);
         }
 
+        protected virtual void onLlegoImagen(Boolean llego)
+        {
+            if (LlegoImagen != null)
+                LlegoImagen(this, llego);
+        }
+        protected virtual void porcentajeImagen(float cantidad,float bytes_actuales,float total)
+        {
+            if(PorcentajeImagen != null)
+            {
+                PorcentajeImagen(this, cantidad,bytes_actuales,total);
+            }
+        }
+
+        protected virtual void avisarImagen(string ruta)
+        {
+            if (AvisarImagen != null)
+                AvisarImagen(this, ruta);
+        }
+
         private void VerificandoSalida()
         {
             while (puerto.IsOpen)
@@ -215,11 +244,17 @@ namespace winTwoPlays
 
                 int chunkSize = 1019;
 
-                for (int i = 0; i < archivoEnviar.bytes.Length; i += chunkSize)
+                int tamaño_imagen = archivoEnviar.bytes.Length;
+
+                int cantidad_exacta = 1024 * ((tamaño_imagen / 1024) + 1);
+
+                for (int i = 0; i < tamaño_imagen; i += chunkSize)
                 {
                     int size = Math.Min(chunkSize, archivoEnviar.bytes.Length - i);
 
                     byte[] TramaEnvio2 = Enumerable.Repeat((byte)'@', chunkSize).ToArray();
+
+                    archivoEnviar.Avance += size;
 
                     Array.Copy(archivoEnviar.bytes, i, TramaEnvio2, 0, size);
 
@@ -234,14 +269,25 @@ namespace winTwoPlays
                         Z += puerto.BytesToRead;
                     }
 
+                    if (i == 0)
+                    {
+                        porcentajeImagen(0,0,tamaño_imagen);
+                    }
+                    else
+                    {
+                        porcentajeImagen(((float) i / (float)cantidad_exacta) * 100, archivoEnviar.Avance, tamaño_imagen); // 0 1019
+                    }
+
                     Console.WriteLine("Dentro:" + Z);
+
                 }
                 Console.WriteLine("Fuera: " + Z);
+                onLlegoImagen(true);
                 MessageBox.Show("Archivo enviado correctamente.");
-
             }
             catch(Exception ex)
             {
+                onLlegoImagen(false);
                 MessageBox.Show(ex.Message);
             }
         }
@@ -251,11 +297,11 @@ namespace winTwoPlays
             try
             {
 
-                string cabecera_info = ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 7); //"I0021101 2 .TXT
+                string cabecera_info = ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 7); //"I0011010 - 011 - pollito.txt
 
-                int longitud_extension = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 8, 1));
+                int longitud_extension = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 8, 3));
 
-                string extension = ASCIIEncoding.UTF8.GetString(TramaRecibida, 9, longitud_extension);
+                string name_archivo = ASCIIEncoding.UTF8.GetString(TramaRecibida, 11, longitud_extension);
 
                 int peso_imagen = Convert.ToInt32(cabecera_info);
 
@@ -263,7 +309,7 @@ namespace winTwoPlays
 
                 Console.WriteLine("Peso imagen : "+ peso_imagen);
 
-                String ruta_temp = $"E:/Probando/Recibir/archivo_8{extension}";
+                String ruta_temp = $"E:/Probando/Recibir/{name_archivo}";
 
                 if (File.Exists(ruta_temp))
                 {
@@ -296,18 +342,20 @@ namespace winTwoPlays
                     EscribiendoArchivo.Write(TramaRecibida, 5, bytesRestantes);
                     archivoRecibir.Avance += bytesRestantes;
 
-                    MessageBox.Show("Se acabo de construir el archivo");
+                    avisarImagen(archivoRecibir.Nombre);
+
                     EscribiendoArchivo.Close();
                     FlujoArchivoRecibir.Close();
                 }
             }
             catch (IOException ioEx)
             {
-                MessageBox.Show("Error al escribir el archivo: " + ioEx.Message);
+                MessageBox.Show("Error al escribir el archivo pasoooooo aquiii: " + ioEx.Message);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error : " + ex.Message);
+                onLlegoImagen(false);
+                MessageBox.Show("Error aquiiii pasooooo: " + ex.Message);
             }
         }
 
@@ -317,16 +365,21 @@ namespace winTwoPlays
             {
                 int tama = archivoEnviar.bytes.Length;
 
-                string extension = Path.GetExtension(archivoEnviar.Nombre); //.txt 3
+                string palabra_extension = Path.GetFileName(archivoEnviar.Nombre); //pollito.txt 3
+
+                //"11"pollito.txt
+
 
                 //"I0000120 - 4 - .txt
 
                 int tama_virtual = Convert.ToString(tama).Length;
                 string info = ConstruirCabecera("I", tama, 7);
 
-                int tama_extension = extension.Length;
+                int tama_extension = palabra_extension.Length;
 
-                info += Convert.ToString(tama_extension) + extension; 
+                info += tama_extension.ToString("D3") + palabra_extension; //"I0120000" - "011" - "pollito.txt"
+                
+                //info - 011 - pollito.txt
 
                 TramaCabeceraInfo = ASCIIEncoding.UTF8.GetBytes(info);
 

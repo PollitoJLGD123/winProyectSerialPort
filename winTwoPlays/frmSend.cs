@@ -15,9 +15,21 @@ namespace winTwoPlays
     public partial class frmSend : Form
     {
         claseSendRecive conexion;
-        Image imagen_redimensionada;
+
         delegate void hacerMetodoSecundario(string mensaje);
+
+        delegate void confirmarEnvio(Boolean llego);
+
+        delegate void porcentajeEnvio(float cantidad, float bytes_actuales, float total);
+
+        delegate void avisarImagen(string ruta);
+
         hacerMetodoSecundario delegadoMetodo;
+        confirmarEnvio delegadoImagen;
+        porcentajeEnvio delegadoPorcentaje;
+
+        avisarImagen delegadoLlegoImagen;
+
         String rutaArchivo;
 
         byte[] bytesImagen;
@@ -33,8 +45,55 @@ namespace winTwoPlays
             InitializeComponent();
             this.conexion = conexion;
             lblTitulo.Text += $" {name}";
+
             conexion.LlegoMensaje += new claseSendRecive.HandlerTxRx(llego_Mensaje);
             delegadoMetodo = new hacerMetodoSecundario(MostrandoMensaje);
+
+            conexion.LlegoImagen += new claseSendRecive.DelegadoLLegoArchivo(llego_imagen);
+            delegadoImagen = new confirmarEnvio(mostrarConfirmacion);
+
+            conexion.PorcentajeImagen += new claseSendRecive.DelegadoPorcentaje(porcentaje_actual);
+            delegadoPorcentaje = new porcentajeEnvio(llenarBarra);
+
+            conexion.AvisarImagen += new claseSendRecive.DelegadoAvisarArchivo(ruta_archivo_enviado);
+            delegadoLlegoImagen = new avisarImagen(llenarRutaArchivoLlego);
+
+        }
+
+        private void ruta_archivo_enviado(object o, string ruta)
+        {
+            Invoke(delegadoLlegoImagen, ruta);
+        }
+
+        private void llenarRutaArchivoLlego(string ruta)
+        {
+            txtRutaEnviada.Text = $"\n Llego un archivo exitosamente: {ruta}";
+            MessageBox.Show($"Llego un archivo exitosamente: {ruta}");
+        }
+
+        private void porcentaje_actual(object o, float cantidad, float bytes_actuales, float total)
+        {
+            Invoke(delegadoPorcentaje, cantidad, bytes_actuales, total);
+        }
+
+        private void llenarBarra(float cantidad, float bytes_actuales, float total)
+        {
+            barraProgreso.Value = (int) Math.Ceiling(cantidad);
+            lblBytesEnvio.Text = $"Bytes Enviados: {bytes_actuales.ToString()}/{total.ToString()}";
+        }
+
+        private void llego_imagen(object o, Boolean llego)
+        {
+            Invoke(delegadoImagen, llego);
+        }
+
+        private void mostrarConfirmacion(Boolean verdadero)
+        {
+            if (verdadero)
+            {
+                checkEnviado.Checked = verdadero;
+                checkEnviado.ForeColor = Color.Green;
+            }
         }
 
         private void llego_Mensaje(object o, string mm)
@@ -132,6 +191,8 @@ namespace winTwoPlays
                 }
                 else
                 {
+                    checkEnviado.Checked = false;
+                    checkEnviado.ForeColor = Color.Red;
                     conexion.IniciaEnvioArchivo(rutaArchivo);
                 }
             }catch(Exception ex)

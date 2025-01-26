@@ -51,11 +51,15 @@
             this.lblTitulo = new System.Windows.Forms.Label();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
+            this.txtRutaEnviada = new System.Windows.Forms.RichTextBox();
+            this.lblBytesEnvio = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.lblBytesEnvio);
+            this.panel1.Controls.Add(this.txtRutaEnviada);
             this.panel1.Controls.Add(this.txtRuta);
             this.panel1.Controls.Add(this.txtConversacion);
             this.panel1.Controls.Add(this.lblLenght);
@@ -82,7 +86,7 @@
             // txtRuta
             // 
             this.txtRuta.Enabled = false;
-            this.txtRuta.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRuta.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtRuta.Location = new System.Drawing.Point(741, 196);
             this.txtRuta.Name = "txtRuta";
             this.txtRuta.Size = new System.Drawing.Size(174, 153);
@@ -130,7 +134,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(421, 604);
+            this.label7.Location = new System.Drawing.Point(343, 559);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(161, 28);
             this.label7.TabIndex = 15;
@@ -180,15 +184,17 @@
             // 
             // checkEnviado
             // 
+            this.checkEnviado.AutoCheck = false;
             this.checkEnviado.AutoSize = true;
-            this.checkEnviado.Enabled = false;
+            this.checkEnviado.BackColor = System.Drawing.Color.White;
             this.checkEnviado.Font = new System.Drawing.Font("Lucida Handwriting", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkEnviado.Location = new System.Drawing.Point(708, 612);
+            this.checkEnviado.ForeColor = System.Drawing.Color.Red;
+            this.checkEnviado.Location = new System.Drawing.Point(720, 643);
             this.checkEnviado.Name = "checkEnviado";
             this.checkEnviado.Size = new System.Drawing.Size(207, 21);
             this.checkEnviado.TabIndex = 8;
             this.checkEnviado.Text = "Imagen Enviada ✓ ✖";
-            this.checkEnviado.UseVisualStyleBackColor = true;
+            this.checkEnviado.UseVisualStyleBackColor = false;
             // 
             // btnEnviarMensaje
             // 
@@ -243,7 +249,7 @@
             // 
             // barraProgreso
             // 
-            this.barraProgreso.Location = new System.Drawing.Point(678, 549);
+            this.barraProgreso.Location = new System.Drawing.Point(688, 544);
             this.barraProgreso.Name = "barraProgreso";
             this.barraProgreso.Size = new System.Drawing.Size(270, 23);
             this.barraProgreso.TabIndex = 1;
@@ -262,6 +268,25 @@
             // fileDialog
             // 
             this.fileDialog.FileName = "fileDialog";
+            // 
+            // txtRutaEnviada
+            // 
+            this.txtRutaEnviada.Enabled = false;
+            this.txtRutaEnviada.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRutaEnviada.Location = new System.Drawing.Point(348, 602);
+            this.txtRutaEnviada.Name = "txtRutaEnviada";
+            this.txtRutaEnviada.Size = new System.Drawing.Size(301, 79);
+            this.txtRutaEnviada.TabIndex = 22;
+            this.txtRutaEnviada.Text = "";
+            // 
+            // lblBytesEnvio
+            // 
+            this.lblBytesEnvio.AutoSize = true;
+            this.lblBytesEnvio.Location = new System.Drawing.Point(685, 588);
+            this.lblBytesEnvio.Name = "lblBytesEnvio";
+            this.lblBytesEnvio.Size = new System.Drawing.Size(100, 16);
+            this.lblBytesEnvio.TabIndex = 23;
+            this.lblBytesEnvio.Text = "Bytes de Envio:";
             // 
             // frmSend
             // 
@@ -304,5 +329,7 @@
         private System.IO.Ports.SerialPort serialPort;
         private System.Windows.Forms.RichTextBox txtConversacion;
         private System.Windows.Forms.RichTextBox txtRuta;
+        private System.Windows.Forms.RichTextBox txtRutaEnviada;
+        private System.Windows.Forms.Label lblBytesEnvio;
     }
 }
