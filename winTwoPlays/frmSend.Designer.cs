@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSend));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txtConversacion = new System.Windows.Forms.RichTextBox();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.lblLenght = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -50,8 +52,6 @@
             this.lblTitulo = new System.Windows.Forms.Label();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
-            this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.txtConversacion = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
@@ -81,6 +81,24 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(976, 712);
             this.panel1.TabIndex = 1;
+            // 
+            // txtConversacion
+            // 
+            this.txtConversacion.Enabled = false;
+            this.txtConversacion.Location = new System.Drawing.Point(28, 413);
+            this.txtConversacion.Name = "txtConversacion";
+            this.txtConversacion.Size = new System.Drawing.Size(276, 268);
+            this.txtConversacion.TabIndex = 20;
+            this.txtConversacion.Text = "";
+            // 
+            // pictureBox
+            // 
+            this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox.Location = new System.Drawing.Point(715, 180);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(200, 200);
+            this.pictureBox.TabIndex = 19;
+            this.pictureBox.TabStop = false;
             // 
             // lblLenght
             // 
@@ -129,6 +147,7 @@
             this.btnEnviarImagen.TabIndex = 14;
             this.btnEnviarImagen.Text = "Enviar Imagen";
             this.btnEnviarImagen.UseVisualStyleBackColor = true;
+            this.btnEnviarImagen.Click += new System.EventHandler(this.btnEnviarImagen_Click);
             // 
             // btnConstruir
             // 
@@ -164,7 +183,7 @@
             // btnSeleccionarImagen
             // 
             this.btnSeleccionarImagen.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSeleccionarImagen.Location = new System.Drawing.Point(380, 199);
+            this.btnSeleccionarImagen.Location = new System.Drawing.Point(376, 197);
             this.btnSeleccionarImagen.Name = "btnSeleccionarImagen";
             this.btnSeleccionarImagen.Size = new System.Drawing.Size(226, 43);
             this.btnSeleccionarImagen.TabIndex = 9;
@@ -249,31 +268,13 @@
             this.lblTitulo.ForeColor = System.Drawing.Color.Blue;
             this.lblTitulo.Location = new System.Drawing.Point(268, 20);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(262, 58);
+            this.lblTitulo.Size = new System.Drawing.Size(256, 55);
             this.lblTitulo.TabIndex = 0;
             this.lblTitulo.Text = "Serial Port";
             // 
             // fileDialog
             // 
             this.fileDialog.FileName = "fileDialog";
-            // 
-            // pictureBox
-            // 
-            this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox.Location = new System.Drawing.Point(715, 180);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(200, 200);
-            this.pictureBox.TabIndex = 19;
-            this.pictureBox.TabStop = false;
-            // 
-            // txtConversacion
-            // 
-            this.txtConversacion.Enabled = false;
-            this.txtConversacion.Location = new System.Drawing.Point(28, 413);
-            this.txtConversacion.Name = "txtConversacion";
-            this.txtConversacion.Size = new System.Drawing.Size(276, 268);
-            this.txtConversacion.TabIndex = 20;
-            this.txtConversacion.Text = "";
             // 
             // frmSend
             // 

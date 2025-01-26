@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +18,9 @@ namespace winTwoPlays
         Image imagen_redimensionada;
         delegate void hacerMetodoSecundario(string mensaje);
         hacerMetodoSecundario delegadoMetodo;
+
+        byte[] bytesImagen;
+        classArchivo archivo;
 
         public frmSend()
         {
@@ -75,7 +80,7 @@ namespace winTwoPlays
                 {
                     Image imagen = Image.FromFile(fileDialog.FileName);
                      
-                    imagen_redimensionada = ResizeImage(imagen, 30, 30);
+                    imagen_redimensionada = ResizeImage(imagen, 80, 80);
 
                     pictureBox.Image = imagen_redimensionada;
                 }
@@ -130,6 +135,17 @@ namespace winTwoPlays
                     txtConversacion.Text += $"\n {parte}: {texto}";
                     txtMensaje.Text = "";
                 }
+            }
+        }
+
+        private void btnEnviarImagen_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                conexion.IniciaEnvioArchivo(imagen_redimensionada);
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

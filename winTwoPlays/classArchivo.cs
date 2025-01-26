@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace winTwoPlays
 {
-    internal class classArchivo
+    public class classArchivo
     {
-        public int Num { get; set; }
+        public classArchivo(string Nombre, byte[] bytes, int Avance)
+        {
+            this.bytes = bytes;
+            this.Avance = Avance;
+            this.Nombre = Nombre;
+        }
         public string Nombre { get; set; }
-        public string Ruta { get; set; }
-        public long Tamaño { get; set; }
-        public long Avance { get; set; }
-        public Boolean Activo { get; set; }
-
+        public byte[] bytes { get; set; }
+        public int Avance { get; set; }
     }
 }
