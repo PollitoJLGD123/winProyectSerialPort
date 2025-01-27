@@ -85,7 +85,7 @@ namespace winTwoPlays
             procesoVerificaSalida.Start();
 
 
-            MessageBox.Show("Puerto Encendido: " + puerto.PortName);
+            Console.WriteLine("Puerto Encendido: " + puerto.PortName);
         }
 
         private void dataReceived(object o, SerialDataReceivedEventArgs sd)
