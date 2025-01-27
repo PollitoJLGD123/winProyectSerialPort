@@ -133,8 +133,15 @@ namespace winTwoPlays
                 {
                     if (conexion.EstaAbierto())
                     {
-                        accion1 = new frmSend("COM 1", conexion);
-                        accion1.Visible = true;
+                        if(accion1 != null && accion1.Visible == false)
+                        {
+                            accion1 = new frmSend("COM 1", conexion);
+                            accion1.Visible = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("El frame ya esta abierto");
+                        }
                     }
                     else
                     {
@@ -201,8 +208,16 @@ namespace winTwoPlays
                 {
                     if (conexion2.EstaAbierto())
                     {
-                        accion2 = new frmSend("COM 2", conexion2);
-                        accion2.Visible = true;
+
+                        if (accion2 != null && accion2.Visible == false)
+                        {
+                            accion2 = new frmSend("COM 2", conexion2);
+                            accion2.Visible = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("El frame ya esta abierto");
+                        }
                     }
                     else
                     {

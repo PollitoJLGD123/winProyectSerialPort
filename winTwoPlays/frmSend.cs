@@ -18,22 +18,20 @@ namespace winTwoPlays
 
         delegate void hacerMetodoSecundario(string mensaje);
 
-        delegate void confirmarEnvio(Boolean llego);
-
         delegate void porcentajeEnvio(float cantidad, float bytes_actuales, float total);
 
         delegate void avisarImagen(string ruta);
 
+        delegate void porcentajeRecibir(float cantidad, float bytes_actuales, float total);
+
         hacerMetodoSecundario delegadoMetodo;
-        confirmarEnvio delegadoImagen;
         porcentajeEnvio delegadoPorcentaje;
 
         avisarImagen delegadoLlegoImagen;
 
-        String rutaArchivo;
+        porcentajeRecibir delegadoPorcentajeRecibir;
 
-        byte[] bytesImagen;
-        classArchivo archivo;
+        String rutaArchivo;
 
         public frmSend()
         {
@@ -49,15 +47,31 @@ namespace winTwoPlays
             conexion.LlegoMensaje += new claseSendRecive.HandlerTxRx(llego_Mensaje);
             delegadoMetodo = new hacerMetodoSecundario(MostrandoMensaje);
 
-            conexion.LlegoImagen += new claseSendRecive.DelegadoLLegoArchivo(llego_imagen);
-            delegadoImagen = new confirmarEnvio(mostrarConfirmacion);
-
             conexion.PorcentajeImagen += new claseSendRecive.DelegadoPorcentaje(porcentaje_actual);
             delegadoPorcentaje = new porcentajeEnvio(llenarBarra);
 
             conexion.AvisarImagen += new claseSendRecive.DelegadoAvisarArchivo(ruta_archivo_enviado);
             delegadoLlegoImagen = new avisarImagen(llenarRutaArchivoLlego);
 
+            conexion.PorcentajeImagenRecibir += new claseSendRecive.DelegadoPorcentajeRecibir(porcentaje_recibir);
+            delegadoPorcentajeRecibir = new porcentajeRecibir(llenarBarraRecibir);
+
+        }
+
+        private void porcentaje_recibir(object o, float cantidad, float bytes_actuales, float total)
+        {
+            Invoke(delegadoPorcentajeRecibir, cantidad, bytes_actuales, total);
+        }
+
+        private void llenarBarraRecibir(float cantidad, float bytes_actuales, float total)
+        {
+            barraRecibir.Value = (int)Math.Ceiling(cantidad);
+            lblBytesConstruccion.Text = $"Bytes de Construccion: {bytes_actuales.ToString()}/{total.ToString()}";
+            if (bytes_actuales < total)
+            {
+                checkRecibir.Checked = false;
+                checkRecibir.ForeColor = Color.Red;
+            }
         }
 
         private void ruta_archivo_enviado(object o, string ruta)
@@ -68,6 +82,8 @@ namespace winTwoPlays
         private void llenarRutaArchivoLlego(string ruta)
         {
             txtRutaEnviada.Text = $"\n Llego un archivo exitosamente: {ruta}";
+            checkRecibir.Checked = true;
+            checkRecibir.ForeColor = Color.Green;
             MessageBox.Show($"Llego un archivo exitosamente: {ruta}");
         }
 
@@ -80,18 +96,10 @@ namespace winTwoPlays
         {
             barraProgreso.Value = (int) Math.Ceiling(cantidad);
             lblBytesEnvio.Text = $"Bytes Enviados: {bytes_actuales.ToString()}/{total.ToString()}";
-        }
 
-        private void llego_imagen(object o, Boolean llego)
-        {
-            Invoke(delegadoImagen, llego);
-        }
-
-        private void mostrarConfirmacion(Boolean verdadero)
-        {
-            if (verdadero)
+            if(bytes_actuales == total)
             {
-                checkEnviado.Checked = verdadero;
+                checkEnviado.Checked = true;
                 checkEnviado.ForeColor = Color.Green;
             }
         }

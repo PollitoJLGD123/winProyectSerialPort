@@ -21,14 +21,14 @@ namespace winTwoPlays
         public delegate void HandlerTxRx(object oo, string mensRec);
         public event HandlerTxRx LlegoMensaje;
 
-        public delegate void DelegadoLLegoArchivo(object oo,Boolean llego);
-        public event DelegadoLLegoArchivo LlegoImagen;
-
         public delegate void DelegadoPorcentaje(object oo, float cantidad, float bytes_actuales, float total);
         public event DelegadoPorcentaje PorcentajeImagen;
 
         public delegate void DelegadoAvisarArchivo(object oo, string ruta);
         public event DelegadoAvisarArchivo AvisarImagen;
+
+        public delegate void DelegadoPorcentajeRecibir(object oo, float cantidad, float bytes_actuales, float total);
+        public event DelegadoPorcentajeRecibir PorcentajeImagenRecibir;
 
 
         byte[] TramaEnvio;
@@ -180,11 +180,6 @@ namespace winTwoPlays
                 LlegoMensaje(this, mensaje_recibir);
         }
 
-        protected virtual void OnLlegoImagen(Boolean llego)
-        {
-            if (LlegoImagen != null)
-                LlegoImagen(this, llego);
-        }
         protected virtual void porcentajeImagen(float cantidad,float bytes_actuales,float total)
         {
             if(PorcentajeImagen != null)
@@ -197,6 +192,14 @@ namespace winTwoPlays
         {
             if (AvisarImagen != null)
                 AvisarImagen(this, ruta);
+        }
+
+        protected virtual void porcentajeImagenRecibir(float cantidad, float bytes_actuales, float total)
+        {
+            if (PorcentajeImagenRecibir != null)
+            {
+                PorcentajeImagenRecibir(this, cantidad, bytes_actuales, total);
+            }
         }
 
         private void VerificandoSalida()
@@ -278,12 +281,10 @@ namespace winTwoPlays
                     }
 
                 }
-                OnLlegoImagen(true);
                 MessageBox.Show("Archivo enviado correctamente.");
             }
             catch(Exception ex)
             {
-                OnLlegoImagen(false);
                 MessageBox.Show(ex.Message);
             }
         }
@@ -303,7 +304,7 @@ namespace winTwoPlays
 
                 Console.WriteLine("Peso imagen : "+ peso_imagen);
 
-                String ruta_temp = $"D:/ZZZ{name_archivo}";  // Ruta en la que vamos a Guardar el archivo
+                String ruta_temp = $"E:/Probando/Recibir/{name_archivo}";  // Ruta en la que vamos a Guardar el archivo
 
                 if (File.Exists(ruta_temp))
                 {
@@ -329,12 +330,16 @@ namespace winTwoPlays
                 if (bytesRestantes > 1019)
                 {
                     EscribiendoArchivo.Write(TramaRecibida, 5, 1019);//Llenamos los datos del archivo que se esta pasando
-                    archivoRecibir.Avance += 1019;                    
+                    archivoRecibir.Avance += 1019;
+                    porcentajeImagenRecibir(((float)archivoRecibir.Avance / (float)archivoRecibir.bytes.Length) * 100, archivoRecibir.Avance, archivoRecibir.bytes.Length);
+
                 }
                 else
                 {
                     EscribiendoArchivo.Write(TramaRecibida, 5, bytesRestantes); //Lenamos los ultimos datos del archivo
                     archivoRecibir.Avance += bytesRestantes;
+
+                    porcentajeImagenRecibir(((float)archivoRecibir.Avance / (float)archivoRecibir.bytes.Length) * 100, archivoRecibir.Avance, archivoRecibir.bytes.Length);
 
                     avisarImagen(archivoRecibir.Nombre);            //cuando se termina se activa el delegado para enviar la ruta al frame
 
@@ -348,7 +353,6 @@ namespace winTwoPlays
             }
             catch (Exception ex)
             {
-                OnLlegoImagen(false);
                 MessageBox.Show("Error 2: " + ex.Message);
             }
         }

@@ -31,6 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSend));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkRecibir = new System.Windows.Forms.CheckBox();
+            this.lblBytesConstruccion = new System.Windows.Forms.Label();
+            this.barraRecibir = new System.Windows.Forms.ProgressBar();
+            this.lblBytesEnvio = new System.Windows.Forms.Label();
+            this.txtRutaEnviada = new System.Windows.Forms.RichTextBox();
             this.txtRuta = new System.Windows.Forms.RichTextBox();
             this.txtConversacion = new System.Windows.Forms.RichTextBox();
             this.lblLenght = new System.Windows.Forms.Label();
@@ -51,13 +56,14 @@
             this.lblTitulo = new System.Windows.Forms.Label();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
-            this.txtRutaEnviada = new System.Windows.Forms.RichTextBox();
-            this.lblBytesEnvio = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.checkRecibir);
+            this.panel1.Controls.Add(this.lblBytesConstruccion);
+            this.panel1.Controls.Add(this.barraRecibir);
             this.panel1.Controls.Add(this.lblBytesEnvio);
             this.panel1.Controls.Add(this.txtRutaEnviada);
             this.panel1.Controls.Add(this.txtRuta);
@@ -80,14 +86,63 @@
             this.panel1.Controls.Add(this.lblTitulo);
             this.panel1.Location = new System.Drawing.Point(2, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(976, 712);
+            this.panel1.Size = new System.Drawing.Size(1050, 745);
             this.panel1.TabIndex = 1;
+            // 
+            // checkRecibir
+            // 
+            this.checkRecibir.AutoCheck = false;
+            this.checkRecibir.AutoSize = true;
+            this.checkRecibir.BackColor = System.Drawing.Color.White;
+            this.checkRecibir.Font = new System.Drawing.Font("Lucida Handwriting", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkRecibir.ForeColor = System.Drawing.Color.Red;
+            this.checkRecibir.Location = new System.Drawing.Point(376, 699);
+            this.checkRecibir.Name = "checkRecibir";
+            this.checkRecibir.Size = new System.Drawing.Size(211, 21);
+            this.checkRecibir.TabIndex = 26;
+            this.checkRecibir.Text = "Archivo Recibido ✓ ✖";
+            this.checkRecibir.UseVisualStyleBackColor = false;
+            // 
+            // lblBytesConstruccion
+            // 
+            this.lblBytesConstruccion.AutoSize = true;
+            this.lblBytesConstruccion.Location = new System.Drawing.Point(328, 557);
+            this.lblBytesConstruccion.Name = "lblBytesConstruccion";
+            this.lblBytesConstruccion.Size = new System.Drawing.Size(118, 16);
+            this.lblBytesConstruccion.TabIndex = 25;
+            this.lblBytesConstruccion.Text = "Bytes Construidos:";
+            // 
+            // barraRecibir
+            // 
+            this.barraRecibir.Location = new System.Drawing.Point(331, 508);
+            this.barraRecibir.Name = "barraRecibir";
+            this.barraRecibir.Size = new System.Drawing.Size(270, 23);
+            this.barraRecibir.TabIndex = 24;
+            // 
+            // lblBytesEnvio
+            // 
+            this.lblBytesEnvio.AutoSize = true;
+            this.lblBytesEnvio.Location = new System.Drawing.Point(724, 597);
+            this.lblBytesEnvio.Name = "lblBytesEnvio";
+            this.lblBytesEnvio.Size = new System.Drawing.Size(104, 16);
+            this.lblBytesEnvio.TabIndex = 23;
+            this.lblBytesEnvio.Text = "Bytes Enviados:";
+            // 
+            // txtRutaEnviada
+            // 
+            this.txtRutaEnviada.Enabled = false;
+            this.txtRutaEnviada.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRutaEnviada.Location = new System.Drawing.Point(331, 585);
+            this.txtRutaEnviada.Name = "txtRutaEnviada";
+            this.txtRutaEnviada.Size = new System.Drawing.Size(301, 94);
+            this.txtRutaEnviada.TabIndex = 22;
+            this.txtRutaEnviada.Text = "";
             // 
             // txtRuta
             // 
             this.txtRuta.Enabled = false;
             this.txtRuta.Font = new System.Drawing.Font("Adobe Song Std L", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRuta.Location = new System.Drawing.Point(688, 196);
+            this.txtRuta.Location = new System.Drawing.Point(736, 196);
             this.txtRuta.Name = "txtRuta";
             this.txtRuta.Size = new System.Drawing.Size(270, 153);
             this.txtRuta.TabIndex = 21;
@@ -125,7 +180,7 @@
             // label8
             // 
             this.label8.Image = ((System.Drawing.Image)(resources.GetObject("label8.Image")));
-            this.label8.Location = new System.Drawing.Point(405, 357);
+            this.label8.Location = new System.Drawing.Point(403, 285);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(197, 176);
             this.label8.TabIndex = 16;
@@ -134,7 +189,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(337, 551);
+            this.label7.Location = new System.Drawing.Point(326, 461);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(161, 28);
             this.label7.TabIndex = 15;
@@ -143,7 +198,7 @@
             // btnEnviarImagen
             // 
             this.btnEnviarImagen.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEnviarImagen.Location = new System.Drawing.Point(730, 382);
+            this.btnEnviarImagen.Location = new System.Drawing.Point(778, 375);
             this.btnEnviarImagen.Name = "btnEnviarImagen";
             this.btnEnviarImagen.Size = new System.Drawing.Size(180, 43);
             this.btnEnviarImagen.TabIndex = 14;
@@ -155,7 +210,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(693, 144);
+            this.label6.Location = new System.Drawing.Point(741, 144);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(187, 28);
             this.label6.TabIndex = 11;
@@ -189,7 +244,7 @@
             this.checkEnviado.BackColor = System.Drawing.Color.White;
             this.checkEnviado.Font = new System.Drawing.Font("Lucida Handwriting", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkEnviado.ForeColor = System.Drawing.Color.Red;
-            this.checkEnviado.Location = new System.Drawing.Point(720, 643);
+            this.checkEnviado.Location = new System.Drawing.Point(764, 640);
             this.checkEnviado.Name = "checkEnviado";
             this.checkEnviado.Size = new System.Drawing.Size(205, 21);
             this.checkEnviado.TabIndex = 8;
@@ -221,7 +276,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(683, 480);
+            this.label3.Location = new System.Drawing.Point(722, 503);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(261, 28);
             this.label3.TabIndex = 4;
@@ -249,7 +304,7 @@
             // 
             // barraProgreso
             // 
-            this.barraProgreso.Location = new System.Drawing.Point(688, 535);
+            this.barraProgreso.Location = new System.Drawing.Point(727, 558);
             this.barraProgreso.Name = "barraProgreso";
             this.barraProgreso.Size = new System.Drawing.Size(270, 23);
             this.barraProgreso.TabIndex = 1;
@@ -269,31 +324,12 @@
             // 
             this.fileDialog.FileName = "fileDialog";
             // 
-            // txtRutaEnviada
-            // 
-            this.txtRutaEnviada.Enabled = false;
-            this.txtRutaEnviada.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRutaEnviada.Location = new System.Drawing.Point(331, 602);
-            this.txtRutaEnviada.Name = "txtRutaEnviada";
-            this.txtRutaEnviada.Size = new System.Drawing.Size(301, 79);
-            this.txtRutaEnviada.TabIndex = 22;
-            this.txtRutaEnviada.Text = "";
-            // 
-            // lblBytesEnvio
-            // 
-            this.lblBytesEnvio.AutoSize = true;
-            this.lblBytesEnvio.Location = new System.Drawing.Point(685, 588);
-            this.lblBytesEnvio.Name = "lblBytesEnvio";
-            this.lblBytesEnvio.Size = new System.Drawing.Size(100, 16);
-            this.lblBytesEnvio.TabIndex = 23;
-            this.lblBytesEnvio.Text = "Bytes de Envio:";
-            // 
             // frmSend
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(979, 715);
+            this.ClientSize = new System.Drawing.Size(1054, 743);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -331,5 +367,8 @@
         private System.Windows.Forms.RichTextBox txtRuta;
         private System.Windows.Forms.RichTextBox txtRutaEnviada;
         private System.Windows.Forms.Label lblBytesEnvio;
+        private System.Windows.Forms.Label lblBytesConstruccion;
+        private System.Windows.Forms.ProgressBar barraRecibir;
+        private System.Windows.Forms.CheckBox checkRecibir;
     }
 }
