@@ -76,8 +76,6 @@ namespace winTwoPlays
         {
             puerto = new SerialPort(nombrePuerto, baud, parity_bits, data_bits, stop_bits);
             puerto.ReceivedBytesThreshold = 1024;
-            //puerto.ReadBufferSize = 4096; // Tamaño del buffer de lectura
-            //puerto.WriteBufferSize = 4096; // Tamaño del buffer de escritura
 
             puerto.DataReceived += new SerialDataReceivedEventHandler(dataReceived);
             puerto.Open();
@@ -97,11 +95,9 @@ namespace winTwoPlays
             {
                 Console.WriteLine("Cantidad de lectura" + puerto.BytesToRead);
 
-                puerto.Read(TramaRecibida, 0, 1024);
+                puerto.Read(TramaRecibida, 0, 1024);  //Leemos lo que se encuentre en el puerto en la trama recibida
 
-                string primer_caracter = ASCIIEncoding.UTF8.GetString(TramaRecibida, 0, 1);
-
-                Console.WriteLine("Sobra esto" + puerto.BytesToRead);
+                string primer_caracter = ASCIIEncoding.UTF8.GetString(TramaRecibida, 0, 1);//Identificar que accion se hara
 
                 switch (primer_caracter)
                 {
@@ -149,8 +145,8 @@ namespace winTwoPlays
                 lock (puertoLock)
                 {
                     puerto.Write(TramCabaceraEnvio, 0, 5);
-                    puerto.Write(TramaEnvio, 0, TramaEnvio.Length);
-                    puerto.Write(tramaRelleno, 0, 1019 - TramaEnvio.Length);
+                    puerto.Write(TramaEnvio, 0, TramaEnvio.Length);  //Contenido
+                    puerto.Write(tramaRelleno, 0, 1019 - TramaEnvio.Length);  //Relleno para asegurar el disparador
                 }
             }
             catch(Exception ex)
@@ -165,10 +161,9 @@ namespace winTwoPlays
 
             try
             { // 0 1 2 3 4 5 6 7 8
-                string cabecera_mensaje = ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4);
-                int LongMensRec = Convert.ToInt32(cabecera_mensaje);
+                int LongMensRec = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4)); // "0005" -> 5
 
-                mensaje_recibir = ASCIIEncoding.UTF8.GetString(TramaRecibida, 5, LongMensRec);
+                mensaje_recibir = ASCIIEncoding.UTF8.GetString(TramaRecibida, 5, LongMensRec);   //Extraccion del mensaje
 
                 OnLlegoMensaje();
             }
@@ -185,7 +180,7 @@ namespace winTwoPlays
                 LlegoMensaje(this, mensaje_recibir);
         }
 
-        protected virtual void onLlegoImagen(Boolean llego)
+        protected virtual void OnLlegoImagen(Boolean llego)
         {
             if (LlegoImagen != null)
                 LlegoImagen(this, llego);
@@ -217,8 +212,8 @@ namespace winTwoPlays
         {
             try
             {
-                byte[] bytesImagen = File.ReadAllBytes(rutita);
-                archivoEnviar = new classArchivo(rutita, bytesImagen, 0);
+                byte[] bytesImagen = File.ReadAllBytes(rutita);  //Obtenemos los bytes del archivo de la ruta puesta       
+                archivoEnviar = new classArchivo(rutita, bytesImagen, 0); 
 
                 enviarInformacion();
 
@@ -234,60 +229,61 @@ namespace winTwoPlays
         private void EnviandoArchivo()
         {
             try
-            {
-                int Z = 0;
-                enviarInformacionCompleta.WaitOne();
-                
+            {                
+                enviarInformacionCompleta.WaitOne();    //Esperamos a que se envie la informacion para poder continuar
+
                 byte[] TramCabaceraEnvioArchivo = new byte[5];
 
                 TramCabaceraEnvioArchivo = ASCIIEncoding.UTF8.GetBytes("A0001");
 
-                int chunkSize = 1019;
-
                 int tamaño_imagen = archivoEnviar.bytes.Length;
 
-                int cantidad_exacta = 1024 * ((tamaño_imagen / 1024) + 1);
+                int cantidad_exacta = 1019 *  ((int)( tamaño_imagen / 1019));
 
-                for (int i = 0; i < tamaño_imagen; i += chunkSize)
+                for (int i = 0; i < tamaño_imagen; i += 1019)
                 {
-                    int size = Math.Min(chunkSize, archivoEnviar.bytes.Length - i);
+                    int size = Math.Min(1019, archivoEnviar.bytes.Length - i);
 
-                    byte[] TramaEnvio2 = Enumerable.Repeat((byte)'@', chunkSize).ToArray();
+                    byte[] TramaEnvio2 = Enumerable.Repeat((byte)'@', 1019).ToArray();//Rellena todo el arreglo con @
 
                     archivoEnviar.Avance += size;
 
                     Array.Copy(archivoEnviar.bytes, i, TramaEnvio2, 0, size);
 
                     while (BufferSalidaVacio == false)
-                    {//esperamos
+                    {
+                        //esperamos a q el buffer se vacie, para evitar sobreescritura
                     }
                     lock (puertoLock)
                     {
-                        puerto.Write(TramCabaceraEnvioArchivo, 0, 5); // "A0001"
-                        puerto.Write(TramaEnvio2, 0, 1019);            // 012345
-
-                        Z += puerto.BytesToRead;
+                        puerto.Write(TramCabaceraEnvioArchivo, 0, 5); // Cabecera -> A0001
+                        puerto.Write(TramaEnvio2, 0, 1019);            // Contenido, AQUI ACTIVA EL DISPARADOR LLEVANDONOS AL: CONSTRUIRARHCIVO
                     }
 
                     if (i == 0)
                     {
-                        porcentajeImagen(0,0,tamaño_imagen);
+                        if (tamaño_imagen < 1019)
+                        {
+                            porcentajeImagen(100, archivoEnviar.Avance, tamaño_imagen);
+                        }
+                        else
+                        {
+                            porcentajeImagen(0, 0, tamaño_imagen);  // Delegado para mostrar el porcentaje de la imagen enviada 
+                        }     
+                        
                     }
                     else
                     {
-                        porcentajeImagen(((float) i / (float)cantidad_exacta) * 100, archivoEnviar.Avance, tamaño_imagen); // 0 1019
+                        porcentajeImagen(((float) i / (float)cantidad_exacta) * 100, archivoEnviar.Avance, tamaño_imagen); // Delegado para mostrar el porcentaje de la imagen enviada
                     }
 
-                    Console.WriteLine("Dentro:" + Z);
-
                 }
-                Console.WriteLine("Fuera: " + Z);
-                onLlegoImagen(true);
+                OnLlegoImagen(true);
                 MessageBox.Show("Archivo enviado correctamente.");
             }
             catch(Exception ex)
             {
-                onLlegoImagen(false);
+                OnLlegoImagen(false);
                 MessageBox.Show(ex.Message);
             }
         }
@@ -296,24 +292,22 @@ namespace winTwoPlays
         {
             try
             {
+                //"I0123456789 - 011 - pollito.txt
+                int peso_imagen = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 10));  //  0000002050 -> 2050
 
-                string cabecera_info = ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 7); //"I0011010 - 011 - pollito.txt
+                int longitud_extension = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 11, 3));  // 004
 
-                int longitud_extension = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 8, 3));
-
-                string name_archivo = ASCIIEncoding.UTF8.GetString(TramaRecibida, 11, longitud_extension);
-
-                int peso_imagen = Convert.ToInt32(cabecera_info);
+                string name_archivo = ASCIIEncoding.UTF8.GetString(TramaRecibida, 14, longitud_extension);  // .txt  .pdf  .docx
 
                 byte[] bytes = new byte[peso_imagen];
 
                 Console.WriteLine("Peso imagen : "+ peso_imagen);
 
-                String ruta_temp = $"E:/Probando/Recibir/{name_archivo}";
+                String ruta_temp = $"D:/ZZZ{name_archivo}";  // Ruta en la que vamos a Guardar el archivo
 
                 if (File.Exists(ruta_temp))
                 {
-                    File.Delete(ruta_temp);
+                    File.Delete(ruta_temp); // Evitamos problemas de sobreescritura
                 }
 
                 FlujoArchivoRecibir = new FileStream(ruta_temp, FileMode.Create, FileAccess.Write);
@@ -334,15 +328,15 @@ namespace winTwoPlays
 
                 if (bytesRestantes > 1019)
                 {
-                    EscribiendoArchivo.Write(TramaRecibida, 5, 1019);
-                    archivoRecibir.Avance += 1019;
+                    EscribiendoArchivo.Write(TramaRecibida, 5, 1019);//Llenamos los datos del archivo que se esta pasando
+                    archivoRecibir.Avance += 1019;                    
                 }
                 else
                 {
-                    EscribiendoArchivo.Write(TramaRecibida, 5, bytesRestantes);
+                    EscribiendoArchivo.Write(TramaRecibida, 5, bytesRestantes); //Lenamos los ultimos datos del archivo
                     archivoRecibir.Avance += bytesRestantes;
 
-                    avisarImagen(archivoRecibir.Nombre);
+                    avisarImagen(archivoRecibir.Nombre);            //cuando se termina se activa el delegado para enviar la ruta al frame
 
                     EscribiendoArchivo.Close();
                     FlujoArchivoRecibir.Close();
@@ -350,36 +344,30 @@ namespace winTwoPlays
             }
             catch (IOException ioEx)
             {
-                MessageBox.Show("Error al escribir el archivo pasoooooo aquiii: " + ioEx.Message);
+                MessageBox.Show("Error 1: " + ioEx.Message);
             }
             catch (Exception ex)
             {
-                onLlegoImagen(false);
-                MessageBox.Show("Error aquiiii pasooooo: " + ex.Message);
+                OnLlegoImagen(false);
+                MessageBox.Show("Error 2: " + ex.Message);
             }
         }
 
-        private void enviarInformacion()
+        private void enviarInformacion()//  I (TIPO)- 0123456789 (TAMAÑO) - RELLENO
         {
             try
             {
-                int tama = archivoEnviar.bytes.Length;
+                int tama = archivoEnviar.bytes.Length;                                  // Tamaño de la imagen:  2050
 
-                string palabra_extension = Path.GetFileName(archivoEnviar.Nombre); //pollito.txt 3
+                string palabra_extension = Path.GetFileName(archivoEnviar.Nombre);      // .txt  .pdf .docx
 
-                //"11"pollito.txt
-
-
-                //"I0000120 - 4 - .txt
-
-                int tama_virtual = Convert.ToString(tama).Length;
-                string info = ConstruirCabecera("I", tama, 7);
-
-                int tama_extension = palabra_extension.Length;
-
-                info += tama_extension.ToString("D3") + palabra_extension; //"I0120000" - "011" - "pollito.txt"
+                int tama_virtual = Convert.ToString(tama).Length;                       // "2050"  -> 4
                 
-                //info - 011 - pollito.txt
+                string info = ConstruirCabecera("I", tama, 10);                         //"I0000002050"
+
+                int tama_extension = palabra_extension.Length;                          // ".txt" -> 4
+
+                info += tama_extension.ToString("D3") + palabra_extension;              //"I0000002050" - "011" - ".txt"
 
                 TramaCabeceraInfo = ASCIIEncoding.UTF8.GetBytes(info);
 
@@ -394,7 +382,7 @@ namespace winTwoPlays
                     {
                         lock (puertoLock)
                         {
-                            puerto.Write(TramaInformacion, 0, 1024);
+                            puerto.Write(TramaInformacion, 0, 1024); //ACTIVA EL DISPARADOR LO QUE NOS LLEVA A: INICIOCONSTRUIRARHCIVO
                         }
                     }
                     catch (Exception ex)
