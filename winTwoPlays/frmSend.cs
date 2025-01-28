@@ -119,7 +119,7 @@ namespace winTwoPlays
         {
             try
             {
-                if (txtMensaje.Text.Length < 0)
+                if (txtMensaje.Text.Length <= 0 || txtMensaje.Equals(""))
                 {
                     MessageBox.Show("Ingresa texto válido");
                 }

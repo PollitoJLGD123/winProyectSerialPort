@@ -47,21 +47,17 @@ namespace winTwoPlays
         private FileStream FlujoArchivoRecibir;
         private BinaryWriter EscribiendoArchivo;
 
-        private Boolean BufferSalidaVacio;
-
-
-        Thread procesoVerificaSalida;
-        Thread procesoEnviarMensaje;
-        Thread procesoRecibirMensaje;
-
-        Thread procesoEnvioArchivo;
-        Thread procesoConstruyeArchivo;
+        private Thread procesoConstruir;
 
         String mensaje_recibir;
 
         private readonly object puertoLock = new object();
 
-        private ManualResetEvent enviarInformacionCompleta = new ManualResetEvent(false);
+        private volatile bool isRunning = true;
+        private List<Thread> listaHilos = new List<Thread>();
+        private int maxThreads = 1;
+
+        ColaPrioridad cola = new ColaPrioridad();
 
         public claseSendRecive() 
         {
@@ -80,11 +76,7 @@ namespace winTwoPlays
             puerto.DataReceived += new SerialDataReceivedEventHandler(dataReceived);
             puerto.Open();
 
-            BufferSalidaVacio = true;
-            procesoVerificaSalida = new Thread(VerificandoSalida);
-            procesoVerificaSalida.Start();
-
-
+            EmpezarProcesoHilos();
             Console.WriteLine("Puerto Encendido: " + puerto.PortName);
         }
 
@@ -93,11 +85,13 @@ namespace winTwoPlays
 
             if (puerto.BytesToRead >= 1024)
             {
-                Console.WriteLine("Cantidad de lectura" + puerto.BytesToRead);
+                //Console.WriteLine("Cantidad de lectura" + puerto.BytesToRead);
 
                 puerto.Read(TramaRecibida, 0, 1024);  //Leemos lo que se encuentre en el puerto en la trama recibida
 
                 string primer_caracter = ASCIIEncoding.UTF8.GetString(TramaRecibida, 0, 1);//Identificar que accion se hara
+
+                //Console.WriteLine("Cantidad de lectura" + puerto.BytesToRead);
 
                 switch (primer_caracter)
                 {
@@ -127,32 +121,57 @@ namespace winTwoPlays
 
                 TramaEnvio = ASCIIEncoding.UTF8.GetBytes(message);
 
-                procesoEnviarMensaje = new Thread(MetodoEnviando);
-                procesoEnviarMensaje.Start();
+                byte[] tramaFinal = Enumerable.Repeat((byte)'@', 1024).ToArray();
+
+                Array.Copy(TramCabaceraEnvio, 0, tramaFinal, 0, TramCabaceraEnvio.Length);
+                Array.Copy(TramaEnvio, 0, tramaFinal, 5, TramaEnvio.Length);
+
+                cola.agregarCola(tramaFinal, 1, 0,"Message");
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
-            
+            }  
         }
 
-        private void MetodoEnviando()
+        private void EmpezarProcesoHilos()
         {
-            try
+            for (int i = 0; i < maxThreads; i++)
             {
-                lock (puertoLock)
+                Thread hilo = new Thread(procesoCola);
+                listaHilos.Add(hilo);
+                hilo.Start();
+            }
+        }
+
+        private void StopProcessingQueue()
+        {
+            isRunning = false;
+            foreach (var thread in listaHilos)
+            {
+                if (thread.IsAlive)
                 {
-                    puerto.Write(TramCabaceraEnvio, 0, 5);
-                    puerto.Write(TramaEnvio, 0, TramaEnvio.Length);  //Contenido
-                    puerto.Write(tramaRelleno, 0, 1019 - TramaEnvio.Length);  //Relleno para asegurar el disparador
+                    thread.Join();
                 }
             }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            listaHilos.Clear();
+        }
 
+        private void procesoCola()
+        {
+            while (isRunning)
+            {
+                byte[] data = cola.desencolarCola(); // 
+                if (data != null)
+                {
+                    lock (puertoLock)
+                    {
+                        puerto.Write(data,0,1024);
+                    }
+                }
+                
+            }
         }
 
         private void RecibiendoMensaje()
@@ -170,7 +189,6 @@ namespace winTwoPlays
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         protected virtual void OnLlegoMensaje()
@@ -201,15 +219,6 @@ namespace winTwoPlays
             }
         }
 
-        private void VerificandoSalida()
-        {
-            while (puerto.IsOpen)
-            {
-                BufferSalidaVacio = puerto.BytesToWrite > 0 ?  false :  true;
-            }
-        }
-
-
         public void IniciaEnvioArchivo(String rutita)
         {
             try
@@ -219,8 +228,7 @@ namespace winTwoPlays
 
                 enviarInformacion();
 
-                procesoEnvioArchivo = new Thread(EnviandoArchivo);
-                procesoEnvioArchivo.Start();
+                EnviandoArchivo();
             }
             catch (Exception ex)
             {
@@ -232,7 +240,6 @@ namespace winTwoPlays
         {
             try
             {                
-                enviarInformacionCompleta.WaitOne();    //Esperamos a que se envie la informacion para poder continuar
 
                 byte[] TramCabaceraEnvioArchivo = new byte[5];
 
@@ -242,7 +249,7 @@ namespace winTwoPlays
 
                 int cantidad_exacta = 1019 *  ((int)( tamaño_imagen / 1019));
 
-                for (int i = 0; i < tamaño_imagen; i += 1019)
+                for (int i = 0, j = 0; i < tamaño_imagen; i += 1019, j+= 1 )
                 {
                     int size = Math.Min(1019, archivoEnviar.bytes.Length - i);
 
@@ -252,15 +259,17 @@ namespace winTwoPlays
 
                     Array.Copy(archivoEnviar.bytes, i, TramaEnvio2, 0, size);
 
-                    while (BufferSalidaVacio == false)
-                    {
-                        //esperamos a q el buffer se vacie, para evitar sobreescritura
-                    }
-                    lock (puertoLock)
-                    {
-                        puerto.Write(TramCabaceraEnvioArchivo, 0, 5); // Cabecera -> A0001
-                        puerto.Write(TramaEnvio2, 0, 1019);            // Contenido, AQUI ACTIVA EL DISPARADOR LLEVANDONOS AL: CONSTRUIRARHCIVO
-                    }
+                    byte[] tramFinal = Enumerable.Repeat((byte)'@', 1024).ToArray();
+
+                    Array.Copy(TramCabaceraEnvioArchivo, 0, tramFinal, 0, 5);
+                    Array.Copy(TramaEnvio2, 0, tramFinal, 5, 1019); // 012345 0 
+
+                    cola.agregarCola(tramFinal, 1, j, "Arch");
+
+                    Console.WriteLine(archivoEnviar.Avance);
+                    Console.WriteLine(tramFinal[0] + tramFinal[1] + tramFinal[2] + tramFinal[3]
+                        + tramFinal[4]);
+                    
 
                     if (i == 0)
                     {
@@ -378,24 +387,8 @@ namespace winTwoPlays
 
                 Array.Copy(TramaCabeceraInfo, 0, TramaInformacion, 0, info.Length);
 
+                cola.agregarCola(TramaInformacion,0,0,"Info");
 
-                Thread procesoEnviarInformacion = new Thread(() =>
-                {
-                    try
-                    {
-                        lock (puertoLock)
-                        {
-                            puerto.Write(TramaInformacion, 0, 1024); //ACTIVA EL DISPARADOR LO QUE NOS LLEVA A: INICIOCONSTRUIRARHCIVO
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error en enviandoInformacion: {ex.Message}");
-                    }
-                });
-
-                procesoEnviarInformacion.Start();
-                enviarInformacionCompleta.Set();
             }
             catch(Exception ex)
             {
@@ -410,6 +403,7 @@ namespace winTwoPlays
 
         public void cerrarPuerto()
         {
+            StopProcessingQueue();
             puerto.Close();
         }
 
