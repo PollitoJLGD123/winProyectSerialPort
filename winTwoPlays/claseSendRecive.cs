@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO;
-using System.Drawing;
-using System.Drawing.Imaging;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace winTwoPlays
 {
@@ -41,9 +36,8 @@ namespace winTwoPlays
         byte[] TramaInformacion;
 
         private classArchivo archivoEnviar;
-
-
         private classArchivo archivoRecibir;
+
         private FileStream FlujoArchivoRecibir;
         private BinaryWriter EscribiendoArchivo;
 
@@ -52,12 +46,7 @@ namespace winTwoPlays
 
         Thread procesoVerificaSalida;
         Thread procesoEnviarMensaje;
-        Thread procesoRecibirMensaje;
-
         Thread procesoEnvioArchivo;
-        Thread procesoConstruyeArchivo;
-
-        String mensaje_recibir;
 
         private readonly object puertoLock = new object();
 
@@ -73,7 +62,7 @@ namespace winTwoPlays
 
         public void Inicializar(string nombrePuerto,int baud,int data_bits, 
             StopBits stop_bits, Parity parity_bits)
-        {
+        { 
             puerto = new SerialPort(nombrePuerto, baud, parity_bits, data_bits, stop_bits);
             puerto.ReceivedBytesThreshold = 1024;
 
@@ -93,7 +82,7 @@ namespace winTwoPlays
 
             if (puerto.BytesToRead >= 1024)
             {
-                Console.WriteLine("Cantidad de lectura" + puerto.BytesToRead);
+                Console.WriteLine("Cantidad de lectura" + puerto.BytesToRead); 
 
                 puerto.Read(TramaRecibida, 0, 1024);  //Leemos lo que se encuentre en el puerto en la trama recibida
 
@@ -105,7 +94,7 @@ namespace winTwoPlays
                         RecibiendoMensaje();
                         break;
                     case "A":
-                        ConstruirArchivo();
+                        ConstruirArchivo(); 
                         break;
                     case "I":
                         InicioConstruirArchivo();
@@ -160,11 +149,11 @@ namespace winTwoPlays
 
             try
             { // 0 1 2 3 4 5 6 7 8
-                int LongMensRec = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4)); // "0005" -> 5
+                int LongMensRec = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4)); // "M0012" -> 5
 
-                mensaje_recibir = ASCIIEncoding.UTF8.GetString(TramaRecibida, 5, LongMensRec);   //Extraccion del mensaje
+                string mensaje_recibir = ASCIIEncoding.UTF8.GetString(TramaRecibida, 5, LongMensRec);   //Extraccion del mensaje
 
-                OnLlegoMensaje();
+                OnLlegoMensaje(mensaje_recibir);
             }
             catch(Exception ex)
             {
@@ -173,7 +162,7 @@ namespace winTwoPlays
 
         }
 
-        protected virtual void OnLlegoMensaje()
+        protected virtual void OnLlegoMensaje(string mensaje_recibir)
         {
             if (LlegoMensaje != null)
                 LlegoMensaje(this, mensaje_recibir);
@@ -240,11 +229,11 @@ namespace winTwoPlays
 
                 int tamaño_imagen = archivoEnviar.bytes.Length;
 
-                int cantidad_exacta = 1019 *  ((int)( tamaño_imagen / 1019));
+                int cantidad_exacta = 1019 *  ((int)( tamaño_imagen / 1019)); //
 
-                for (int i = 0; i < tamaño_imagen; i += 1019)
+                for (int i = 0; i < tamaño_imagen; i += 1019) //0, 1019, 2038
                 {
-                    int size = Math.Min(1019, archivoEnviar.bytes.Length - i);
+                    int size = Math.Min(1019, archivoEnviar.bytes.Length - i); // 1019,2
 
                     byte[] TramaEnvio2 = Enumerable.Repeat((byte)'@', 1019).ToArray();//Rellena todo el arreglo con @
 
@@ -292,8 +281,8 @@ namespace winTwoPlays
         {
             try
             {
-                //"I0123456789 - 011 - pollito.txt
-                int peso_imagen = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 10));  //  0000002050 -> 2050
+                //I0123456789 - 011 - pollito.txt
+                int peso_imagen = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 10));  //  0123456789
 
                 int longitud_extension = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 11, 3));  // 004
 
@@ -356,25 +345,25 @@ namespace winTwoPlays
             }
         }
 
-        private void enviarInformacion()//  I (TIPO)- 0123456789 (TAMAÑO) - RELLENO
+        private void enviarInformacion()//  "I-0001200000-011-pollito.txt"
         {
             try
             {
                 int tama = archivoEnviar.bytes.Length;                                  // Tamaño de la imagen:  2050
 
-                string palabra_extension = Path.GetFileName(archivoEnviar.Nombre);      // .txt  .pdf .docx
+                string palabra_extension = Path.GetFileName(archivoEnviar.Nombre);      // pollito.txt  
 
                 int tama_virtual = Convert.ToString(tama).Length;                       // "2050"  -> 4
                 
                 string info = ConstruirCabecera("I", tama, 10);                         //"I0000002050"
 
-                int tama_extension = palabra_extension.Length;                          // ".txt" -> 4
+                int tama_extension = palabra_extension.Length;                          //  pollito.txt  -> 11
 
-                info += tama_extension.ToString("D3") + palabra_extension;              //"I0000002050" - "011" - ".txt"
+                info += tama_extension.ToString("D3") + palabra_extension;              //"I0000002050" - "011" - "pollito.txt"
 
                 TramaCabeceraInfo = ASCIIEncoding.UTF8.GetBytes(info);
 
-                TramaInformacion = Enumerable.Repeat((byte)'@', 1024).ToArray(); 
+                TramaInformacion = Enumerable.Repeat((byte)'@', 1024).ToArray();
 
                 Array.Copy(TramaCabeceraInfo, 0, TramaInformacion, 0, info.Length);
 
@@ -415,7 +404,8 @@ namespace winTwoPlays
 
         private string ConstruirCabecera(string identificador, int longitud,int cantidad)
         {
-            return identificador + longitud.ToString($"D{cantidad}"); 
+            return identificador + longitud.ToString($"D{cantidad}"); //d4
+            // "M0080"
             // formato de 4 dig 0112
         }
 
