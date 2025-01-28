@@ -20,3 +20,14 @@ D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\wi
 D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\obj\Debug\winTwoPlays.csproj.CoreCompileInputs.cache
 D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\obj\Debug\winTwoPlays.exe
 D:\SISTEMAS\CICLO VII\REDES Y COMUNICACIONES 1\S02\Tarea\winProyectSerialPort\winTwoPlays\obj\Debug\winTwoPlays.pdb
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\bin\Debug\winTwoPlays.exe.config
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\bin\Debug\winTwoPlays.exe
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\bin\Debug\winTwoPlays.pdb
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.csproj.AssemblyReference.cache
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.Form1.resources
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.frmSend.resources
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.Properties.Resources.resources
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.csproj.GenerateResource.cache
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.csproj.CoreCompileInputs.cache
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.exe
+C:\Daniel\Universidad\Nueva carpeta\EXTRAORDINARIO - REDES 1\proyecto\winTwoPlays\obj\Debug\winTwoPlays.pdb
