@@ -102,8 +102,7 @@ namespace winTwoPlays
                 switch (primer_caracter)
                 {
                     case "M":
-                        procesoRecibirMensaje = new Thread(RecibiendoMensaje);
-                        procesoRecibirMensaje.Start();
+                        RecibiendoMensaje();
                         break;
                     case "A":
                         ConstruirArchivo();
