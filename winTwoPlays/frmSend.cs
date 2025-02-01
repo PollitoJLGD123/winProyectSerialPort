@@ -18,11 +18,11 @@ namespace winTwoPlays
 
         delegate void hacerMetodoSecundario(string mensaje);
 
-        delegate void porcentajeEnvio(float cantidad, float bytes_actuales, float total);
+        delegate void porcentajeEnvio(float cantidad, float bytes_actuales, float total, int orden);
 
         delegate void avisarImagen(string ruta);
 
-        delegate void porcentajeRecibir(float cantidad, float bytes_actuales, float total);
+        delegate void porcentajeRecibir(float cantidad, float bytes_actuales, float total, int orden);
 
         hacerMetodoSecundario delegadoMetodo;
         porcentajeEnvio delegadoPorcentaje;
@@ -33,6 +33,7 @@ namespace winTwoPlays
 
         String rutaArchivo;
 
+        int number;
         public frmSend()
         {
             InitializeComponent();
@@ -43,6 +44,8 @@ namespace winTwoPlays
             InitializeComponent();
             this.conexion = conexion;
             lblTitulo.Text += $" {name}";
+
+            number = 0;
 
             conexion.LlegoMensaje += new claseSendRecive.HandlerTxRx(llego_Mensaje);
             delegadoMetodo = new hacerMetodoSecundario(MostrandoMensaje);
@@ -58,20 +61,44 @@ namespace winTwoPlays
 
         }
 
-        private void porcentaje_recibir(object o, float cantidad, float bytes_actuales, float total)
+        private void porcentaje_recibir(object o, float cantidad, float bytes_actuales, float total, int orden)
         {
-            Invoke(delegadoPorcentajeRecibir, cantidad, bytes_actuales, total);
+            Invoke(delegadoPorcentajeRecibir, cantidad, bytes_actuales, total, orden);
         }
 
-        private void llenarBarraRecibir(float cantidad, float bytes_actuales, float total)
+        private void llenarBarraRecibir(float cantidad, float bytes_actuales, float total, int orden)
         {
-            barraRecibir.Value = (int)Math.Ceiling(cantidad);
-            lblBytesConstruccion.Text = $"Bytes de Construccion: {bytes_actuales.ToString()}/{total.ToString()}";
-            if (bytes_actuales < total)
+            if (orden == 0)
             {
-                checkRecibir.Checked = false;
-                checkRecibir.ForeColor = Color.Red;
+                barraRecibir.Value = (int)Math.Ceiling(cantidad);
+                lblBytesConstruccion.Text = $"Bytes de Construccion: {bytes_actuales.ToString()}/{total.ToString()}";
+                if (bytes_actuales < total)
+                {
+                    checkRecibir.Checked = false;
+                    checkRecibir.ForeColor = Color.Red;
+                }
+                else
+                {
+                    checkRecibir.Checked = true;
+                    checkRecibir.ForeColor = Color.Green;
+                }
             }
+            if (orden == 1)
+            {
+                barraRecibir1.Value = (int)Math.Ceiling(cantidad);
+                lblBytesConstruccion1.Text = $"Bytes de Construccion: {bytes_actuales.ToString()}/{total.ToString()}";
+                if (bytes_actuales < total)
+                {
+                    checkRecibir1.Checked = false;
+                    checkRecibir1.ForeColor = Color.Red;
+                }
+                else
+                {
+                    checkRecibir1.Checked = true;
+                    checkRecibir1.ForeColor = Color.Green;
+                }
+            }
+           
         }
 
         private void ruta_archivo_enviado(object o, string ruta)
@@ -82,25 +109,37 @@ namespace winTwoPlays
         private void llenarRutaArchivoLlego(string ruta)
         {
             txtRutaEnviada.Text = $"\n Llego un archivo exitosamente: {ruta}";
-            checkRecibir.Checked = true;
-            checkRecibir.ForeColor = Color.Green;
             MessageBox.Show($"Llego un archivo exitosamente: {ruta}");
         }
 
-        private void porcentaje_actual(object o, float cantidad, float bytes_actuales, float total)
+        private void porcentaje_actual(object o, float cantidad, float bytes_actuales, float total, int orden)
         {
-            Invoke(delegadoPorcentaje, cantidad, bytes_actuales, total);
+            Invoke(delegadoPorcentaje, cantidad, bytes_actuales, total,orden);
         }
 
-        private void llenarBarra(float cantidad, float bytes_actuales, float total)
+        private void llenarBarra(float cantidad, float bytes_actuales, float total, int orden)
         {
-            barraProgreso.Value = (int) Math.Ceiling(cantidad);
-            lblBytesEnvio.Text = $"Bytes Enviados: {bytes_actuales.ToString()}/{total.ToString()}";
-
-            if(bytes_actuales == total)
+            if (orden == 0)
             {
-                checkEnviado.Checked = true;
-                checkEnviado.ForeColor = Color.Green;
+                barraProgreso.Value = (int)Math.Ceiling(cantidad);
+                lblBytesEnvio.Text = $"Bytes Enviados: {bytes_actuales.ToString()}/{total.ToString()}";
+
+                if (bytes_actuales == total)
+                {
+                    checkEnviado.Checked = true;
+                    checkEnviado.ForeColor = Color.Green;
+                }
+            }
+            if (orden == 1)
+            {
+                barraProgreso1.Value = (int)Math.Ceiling(cantidad);
+                lblBytesEnvio1.Text = $"Bytes Enviados: {bytes_actuales.ToString()}/{total.ToString()}";
+
+                if (bytes_actuales == total)
+                {
+                    checkEnviado1.Checked = true;
+                    checkEnviado1.ForeColor = Color.Green;
+                }
             }
         }
 
@@ -119,7 +158,7 @@ namespace winTwoPlays
         {
             try
             {
-                if (txtMensaje.Text.Length < 0)
+                if (txtMensaje.Text.Length <= 0 || txtMensaje.Text.Equals(""))
                 {
                     MessageBox.Show("Ingresa texto válido");
                 }
@@ -199,9 +238,17 @@ namespace winTwoPlays
                 }
                 else
                 {
-                    checkEnviado.Checked = false;
-                    checkEnviado.ForeColor = Color.Red;
-                    conexion.IniciaEnvioArchivo(rutaArchivo);
+                    if(number != 4)
+                    {
+                        checkEnviado.Checked = false;
+                        checkEnviado.ForeColor = Color.Red;
+                        conexion.IniciaEnvioArchivo(rutaArchivo, number);
+                        number++;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Cantidad Completa");
+                    }
                 }
             }catch(Exception ex)
             {
@@ -210,6 +257,16 @@ namespace winTwoPlays
         }
 
         private void frmSend_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
         {
 
         }

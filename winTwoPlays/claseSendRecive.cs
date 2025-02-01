@@ -16,13 +16,13 @@ namespace winTwoPlays
         public delegate void HandlerTxRx(object oo, string mensRec);
         public event HandlerTxRx LlegoMensaje;
 
-        public delegate void DelegadoPorcentaje(object oo, float cantidad, float bytes_actuales, float total);
+        public delegate void DelegadoPorcentaje(object oo, float cantidad, float bytes_actuales, float total, int orden);
         public event DelegadoPorcentaje PorcentajeImagen;
 
         public delegate void DelegadoAvisarArchivo(object oo, string ruta);
         public event DelegadoAvisarArchivo AvisarImagen;
 
-        public delegate void DelegadoPorcentajeRecibir(object oo, float cantidad, float bytes_actuales, float total);
+        public delegate void DelegadoPorcentajeRecibir(object oo, float cantidad, float bytes_actuales, float total, int orden);
         public event DelegadoPorcentajeRecibir PorcentajeImagenRecibir;
 
 
@@ -38,11 +38,10 @@ namespace winTwoPlays
         private classArchivo archivoEnviar;
         private classArchivo archivoRecibir;
 
-        private FileStream FlujoArchivoRecibir;
-        private BinaryWriter EscribiendoArchivo;
+        private classArchivo[] archivosEnviar;
+        private classArchivo[] archivosRecibir;
 
         private Boolean BufferSalidaVacio;
-
 
         Thread procesoVerificaSalida;
         Thread procesoEnviarMensaje;
@@ -58,6 +57,9 @@ namespace winTwoPlays
             TramCabaceraEnvio = new byte[5];
             tramaRelleno = Enumerable.Repeat((byte)'@', 1024).ToArray();
             TramaRecibida = new byte[1024];
+
+            archivosEnviar = new classArchivo[5];
+            archivosRecibir = new classArchivo[5];
         }
 
         public void Inicializar(string nombrePuerto,int baud,int data_bits, 
@@ -168,11 +170,11 @@ namespace winTwoPlays
                 LlegoMensaje(this, mensaje_recibir);
         }
 
-        protected virtual void porcentajeImagen(float cantidad,float bytes_actuales,float total)
+        protected virtual void porcentajeImagen(float cantidad,float bytes_actuales,float total,int orden)
         {
             if(PorcentajeImagen != null)
             {
-                PorcentajeImagen(this, cantidad,bytes_actuales,total);
+                PorcentajeImagen(this, cantidad,bytes_actuales,total,orden);
             }
         }
 
@@ -182,11 +184,11 @@ namespace winTwoPlays
                 AvisarImagen(this, ruta);
         }
 
-        protected virtual void porcentajeImagenRecibir(float cantidad, float bytes_actuales, float total)
+        protected virtual void porcentajeImagenRecibir(float cantidad, float bytes_actuales, float total,int orden)
         {
             if (PorcentajeImagenRecibir != null)
             {
-                PorcentajeImagenRecibir(this, cantidad, bytes_actuales, total);
+                PorcentajeImagenRecibir(this, cantidad, bytes_actuales, total,orden);
             }
         }
 
@@ -199,17 +201,27 @@ namespace winTwoPlays
         }
 
 
-        public void IniciaEnvioArchivo(String rutita)
+        public void IniciaEnvioArchivo(String rutita,int orden) //ruta y 1
         {
             try
             {
-                byte[] bytesImagen = File.ReadAllBytes(rutita);  //Obtenemos los bytes del archivo de la ruta puesta       
-                archivoEnviar = new classArchivo(rutita, bytesImagen, 0); 
+                byte[] bytesImagen = File.ReadAllBytes(rutita);  //Obtenemos los bytes del archivo de la ruta puesta
+                string nombre = rutita.Split('.')[0];
+                string extension = rutita.Split('.')[1];
+                string rutitaf = $"{nombre}{orden}.{extension}";
 
-                enviarInformacion();
+                archivoEnviar = new classArchivo(rutitaf, bytesImagen, 0 , orden);
 
-                procesoEnvioArchivo = new Thread(EnviandoArchivo);
+                archivosEnviar[orden] = archivoEnviar; 
+
+                enviarInformacion(orden); // informacion del archivo
+
+                procesoEnvioArchivo = new Thread(()=> EnviandoArchivo(orden));
                 procesoEnvioArchivo.Start();
+
+                //procesoEnvioArchivo = new Thread(new ParameterizedThreadStart(EnviandoArchivo));
+                //hilo.Start(new Object(orden));
+
             }
             catch (Exception ex)
             {
@@ -217,149 +229,22 @@ namespace winTwoPlays
             }
         }
 
-        private void EnviandoArchivo()
-        {
-            try
-            {                
-                enviarInformacionCompleta.WaitOne();    //Esperamos a que se envie la informacion para poder continuar
-
-                byte[] TramCabaceraEnvioArchivo = new byte[5];
-
-                TramCabaceraEnvioArchivo = ASCIIEncoding.UTF8.GetBytes("A0001");
-
-                int tamaño_imagen = archivoEnviar.bytes.Length;
-
-                int cantidad_exacta = 1019 *  ((int)( tamaño_imagen / 1019)); //
-
-                for (int i = 0; i < tamaño_imagen; i += 1019) //0, 1019, 2038
-                {
-                    int size = Math.Min(1019, archivoEnviar.bytes.Length - i); // 1019,2
-
-                    byte[] TramaEnvio2 = Enumerable.Repeat((byte)'@', 1019).ToArray();//Rellena todo el arreglo con @
-
-                    archivoEnviar.Avance += size;
-
-                    Array.Copy(archivoEnviar.bytes, i, TramaEnvio2, 0, size);
-
-                    while (BufferSalidaVacio == false)
-                    {
-                        //esperamos a q el buffer se vacie, para evitar sobreescritura
-                    }
-                    lock (puertoLock)
-                    {
-                        puerto.Write(TramCabaceraEnvioArchivo, 0, 5); // Cabecera -> A0001
-                        puerto.Write(TramaEnvio2, 0, 1019);            // Contenido, AQUI ACTIVA EL DISPARADOR LLEVANDONOS AL: CONSTRUIRARHCIVO
-                    }
-
-                    if (i == 0)
-                    {
-                        if (tamaño_imagen < 1019)
-                        {
-                            porcentajeImagen(100, archivoEnviar.Avance, tamaño_imagen);
-                        }
-                        else
-                        {
-                            porcentajeImagen(0, 0, tamaño_imagen);  // Delegado para mostrar el porcentaje de la imagen enviada 
-                        }     
-                        
-                    }
-                    else
-                    {
-                        porcentajeImagen(((float) i / (float)cantidad_exacta) * 100, archivoEnviar.Avance, tamaño_imagen); // Delegado para mostrar el porcentaje de la imagen enviada
-                    }
-
-                }
-                MessageBox.Show("Archivo enviado correctamente.");
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        public void InicioConstruirArchivo()
+        private void enviarInformacion(int orden)//  "I-0001200000-011-pollito1.txt-0001"  
+                                        // pollito1.txt luis2.txt  pollito.txt
         {
             try
             {
-                //I0123456789 - 011 - pollito.txt
-                int peso_imagen = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 10));  //  0123456789
+                int tama = archivosEnviar[orden].bytes.Length;                                  // Tamaño de la imagen:  2050
 
-                int longitud_extension = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 11, 3));  // 004
-
-                string name_archivo = ASCIIEncoding.UTF8.GetString(TramaRecibida, 14, longitud_extension);  // .txt  .pdf  .docx
-
-                byte[] bytes = new byte[peso_imagen];
-
-                Console.WriteLine("Peso imagen : "+ peso_imagen);
-
-                String ruta_temp = $"E:/Probando/Recibir/{name_archivo}";  // Ruta en la que vamos a Guardar el archivo
-
-                if (File.Exists(ruta_temp))
-                {
-                    File.Delete(ruta_temp); // Evitamos problemas de sobreescritura
-                }
-
-                FlujoArchivoRecibir = new FileStream(ruta_temp, FileMode.Create, FileAccess.Write);
-                EscribiendoArchivo = new BinaryWriter(FlujoArchivoRecibir);
-                archivoRecibir = new classArchivo(ruta_temp, bytes, 0);
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void ConstruirArchivo()
-        {
-            try
-            {
-                int bytesRestantes = archivoRecibir.bytes.Length - archivoRecibir.Avance;
-
-                if (bytesRestantes > 1019)
-                {
-                    EscribiendoArchivo.Write(TramaRecibida, 5, 1019);//Llenamos los datos del archivo que se esta pasando
-                    archivoRecibir.Avance += 1019;
-                    porcentajeImagenRecibir(((float)archivoRecibir.Avance / (float)archivoRecibir.bytes.Length) * 100, archivoRecibir.Avance, archivoRecibir.bytes.Length);
-
-                }
-                else
-                {
-                    EscribiendoArchivo.Write(TramaRecibida, 5, bytesRestantes); //Lenamos los ultimos datos del archivo
-                    archivoRecibir.Avance += bytesRestantes;
-
-                    porcentajeImagenRecibir(((float)archivoRecibir.Avance / (float)archivoRecibir.bytes.Length) * 100, archivoRecibir.Avance, archivoRecibir.bytes.Length);
-
-                    avisarImagen(archivoRecibir.Nombre);            //cuando se termina se activa el delegado para enviar la ruta al frame
-
-                    EscribiendoArchivo.Close();
-                    FlujoArchivoRecibir.Close();
-                }
-            }
-            catch (IOException ioEx)
-            {
-                MessageBox.Show("Error 1: " + ioEx.Message);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error 2: " + ex.Message);
-            }
-        }
-
-        private void enviarInformacion()//  "I-0001200000-011-pollito.txt"
-        {
-            try
-            {
-                int tama = archivoEnviar.bytes.Length;                                  // Tamaño de la imagen:  2050
-
-                string palabra_extension = Path.GetFileName(archivoEnviar.Nombre);      // pollito.txt  
+                string palabra_extension = Path.GetFileName(archivosEnviar[orden].Nombre);      // pollito1.txt 
 
                 int tama_virtual = Convert.ToString(tama).Length;                       // "2050"  -> 4
-                
+
                 string info = ConstruirCabecera("I", tama, 10);                         //"I0000002050"
 
                 int tama_extension = palabra_extension.Length;                          //  pollito.txt  -> 11
 
-                info += tama_extension.ToString("D3") + palabra_extension;              //"I0000002050" - "011" - "pollito.txt"
+                info += tama_extension.ToString("D3") + palabra_extension + orden.ToString("D4");      // 0001        //"I0000002050" - "011" - "pollito.txt"
 
                 TramaCabeceraInfo = ASCIIEncoding.UTF8.GetBytes(info);
 
@@ -386,9 +271,148 @@ namespace winTwoPlays
                 procesoEnviarInformacion.Start();
                 enviarInformacionCompleta.Set();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void EnviandoArchivo(int orden)
+        {
+            try
+            {
+                enviarInformacionCompleta.WaitOne();    //Esperamos a que se envie la informacion para poder continuar
+
+                byte[] TramCabaceraEnvioArchivo = new byte[5];
+
+                TramCabaceraEnvioArchivo = ASCIIEncoding.UTF8.GetBytes($"A{orden.ToString("D4")}");
+
+                int tamaño_imagen = archivosEnviar[orden].bytes.Length;
+
+                int cantidad_exacta = 1019 * ((int)(tamaño_imagen / 1019)); //
+
+                for (int i = 0; i < tamaño_imagen; i += 1019) //0, 1019, 2038
+                {
+                    int size = Math.Min(1019, archivosEnviar[orden].bytes.Length - i); // 1019,2
+
+                    byte[] TramaEnvio2 = Enumerable.Repeat((byte)'@', 1019).ToArray();//Rellena todo el arreglo con @
+
+                    archivosEnviar[orden].Avance += size;
+
+                    Array.Copy(archivosEnviar[orden].bytes, i, TramaEnvio2, 0, size);
+
+                    while (BufferSalidaVacio == false)
+                    {
+                        //esperamos a q el buffer se vacie, para evitar sobreescritura
+                    }
+                    lock (puertoLock)
+                    {
+                        puerto.Write(TramCabaceraEnvioArchivo, 0, 5); // Cabecera -> A0001
+                        puerto.Write(TramaEnvio2, 0, 1019);            // Contenido, AQUI ACTIVA EL DISPARADOR LLEVANDONOS AL: CONSTRUIRARHCIVO
+                    }
+
+                    if (i == 0)
+                    {
+                        if (tamaño_imagen < 1019)
+                        {
+                            porcentajeImagen(100, archivosEnviar[orden].Avance, tamaño_imagen,orden);
+                        }
+                        else
+                        {
+                            porcentajeImagen(0, 0, tamaño_imagen, orden);  // Delegado para mostrar el porcentaje de la imagen enviada 
+                        }
+
+                    }
+                    else
+                    {
+                        porcentajeImagen(((float)i / (float)cantidad_exacta) * 100, archivosEnviar[orden].Avance, tamaño_imagen, orden); // Delegado para mostrar el porcentaje de la imagen enviada
+                    }
+
+                }
+                MessageBox.Show("Archivo enviado correctamente.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        public void InicioConstruirArchivo()
+        {
+            try
+            {
+                //I0123456789 - 011 - pollito1.txt - 0001
+                int peso_imagen = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 10));  //  0123456789
+
+                int longitud_extension = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 11, 3));  // 004
+
+                string name_archivo = ASCIIEncoding.UTF8.GetString(TramaRecibida, 14, longitud_extension);  // pollito.txt
+
+                int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 14 + longitud_extension, 4)); // 0001
+
+                byte[] bytes = new byte[peso_imagen];
+
+                Console.WriteLine("Peso imagen : "+ peso_imagen);
+
+                String ruta_temp = $"E:/Probando/Recibir/{name_archivo}";  // Ruta en la que vamos a Guardar el archivo
+
+                if (File.Exists(ruta_temp))
+                {
+                    File.Delete(ruta_temp); // Evitamos problemas de sobreescritura 
+                }
+
+                //pollito1.txt pollito2.txt luis3.txt  pollito4.txt aea5.txt
+
+                //pollito.txt pollito1.txt luis.txt pollito2.txt aea.txt
+
+                archivoRecibir = new classArchivo(ruta_temp, bytes, 0, orden);
+
+                archivosRecibir[orden] = archivoRecibir;
+            }
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ConstruirArchivo()
+        {
+            try
+            {
+                int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4)); // 0001
+
+                //pollito1.txt //pollito2.txt
+
+                int bytesRestantes = archivosRecibir[orden].bytes.Length - archivosRecibir[orden].Avance;
+
+                if (bytesRestantes > 1019)
+                {
+                    archivosRecibir[orden].EscribiendoArchivo.Write(TramaRecibida, 5, 1019);//Llenamos los datos del archivo que se esta pasando
+                    archivosRecibir[orden].Avance += 1019;
+                    porcentajeImagenRecibir(((float)archivosRecibir[orden].Avance / (float)archivosRecibir[orden].bytes.Length) * 100, archivosRecibir[orden].Avance, archivosRecibir[orden].bytes.Length,orden);
+
+                }
+                else
+                {
+                    archivosRecibir[orden].EscribiendoArchivo.Write(TramaRecibida, 5, bytesRestantes); //Lenamos los ultimos datos del archivo
+                    archivosRecibir[orden].Avance += bytesRestantes;
+
+                    porcentajeImagenRecibir(((float)archivosRecibir[orden].Avance / (float)archivosRecibir[orden].bytes.Length) * 100, archivosRecibir[orden].Avance, archivosRecibir[orden].bytes.Length,orden);
+
+                    avisarImagen(archivosRecibir[orden].Nombre);            //cuando se termina se activa el delegado para enviar la ruta al frame
+
+                    archivosRecibir[orden].EscribiendoArchivo.Close();
+                    archivosRecibir[orden].FlujoArchivoRecibir.Close();
+                }
+            }
+            catch (IOException ioEx)
+            {
+                MessageBox.Show("Error 1: " + ioEx.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error 2: " + ex.Message);
             }
         }
 
