@@ -369,6 +369,8 @@ namespace winTwoPlays
                 archivoRecibir = new classArchivo(ruta_temp, bytes, 0, orden);
 
                 archivosRecibir[orden] = archivoRecibir;
+
+                archivosRecibir[orden].iniciarFlujo();
             }
             catch(Exception ex)
             {

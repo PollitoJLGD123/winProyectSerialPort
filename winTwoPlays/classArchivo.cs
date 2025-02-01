@@ -14,8 +14,6 @@ namespace winTwoPlays
             this.Avance = Avance;
             this.Nombre = Nombre;
             this.Orden = orden;
-            FlujoArchivoRecibir = new FileStream(Nombre, FileMode.Create, FileAccess.Write); 
-            EscribiendoArchivo = new BinaryWriter(FlujoArchivoRecibir);
         }
         public string Nombre { get; set; }
         public byte[] bytes { get; set; }
@@ -23,5 +21,11 @@ namespace winTwoPlays
         public FileStream FlujoArchivoRecibir { get; set; }
         public BinaryWriter EscribiendoArchivo { get; set; }
         public int Orden { get; set; }
+
+        public void iniciarFlujo()
+        {
+            FlujoArchivoRecibir = new FileStream(Nombre, FileMode.Create, FileAccess.Write);
+            EscribiendoArchivo = new BinaryWriter(FlujoArchivoRecibir);
+        }
     }
 }
