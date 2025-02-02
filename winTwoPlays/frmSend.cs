@@ -126,6 +126,10 @@ namespace winTwoPlays
                 {
                     checkRecibir.Checked = true;
                 }
+                else
+                {
+                    checkRecibir.Checked = false;
+                }
             }
             if (orden == 1)
             {
@@ -135,6 +139,10 @@ namespace winTwoPlays
                 if (bytes_actuales == total)
                 {
                     checkRecibir1.Checked = true;
+                }
+                else
+                {
+                    checkRecibir1.Checked = false;
                 }
             }
             if (orden == 2)
@@ -146,6 +154,10 @@ namespace winTwoPlays
                 {
                     checkRecibir2.Checked = true;
                 }
+                else
+                {
+                    checkRecibir2.Checked = false;
+                }
             }
             if (orden == 3)
             {
@@ -156,6 +168,10 @@ namespace winTwoPlays
                 {
                     checkRecibir3.Checked = true;
                 }
+                else
+                {
+                    checkRecibir3.Checked = false;
+                }
             }
             if (orden == 4)
             {
@@ -165,6 +181,10 @@ namespace winTwoPlays
                 if (bytes_actuales == total)
                 {
                     checkRecibir4.Checked = true;
+                }
+                else
+                {
+                    checkRecibir4.Checked = false;
                 }
             }
         }
@@ -195,7 +215,10 @@ namespace winTwoPlays
                 if (bytes_actuales == total)
                 {
                     checkEnviado.Checked = true;
-                    checkEnviado.ForeColor = Color.Green;
+                }
+                else
+                {
+                    checkEnviado.Checked = false;
                 }
             }
             if (orden == 1)
@@ -206,7 +229,10 @@ namespace winTwoPlays
                 if (bytes_actuales == total)
                 {
                     checkEnviado1.Checked = true;
-                    checkEnviado1.ForeColor = Color.Green;
+                }
+                else
+                {
+                    checkEnviado1.Checked = false;
                 }
             }
             if (orden == 2)
@@ -217,7 +243,10 @@ namespace winTwoPlays
                 if (bytes_actuales == total)
                 {
                     checkEnviado2.Checked = true;
-                    checkEnviado2.ForeColor = Color.Green;
+                }
+                else
+                {
+                    checkEnviado2.Checked = false;
                 }
             }
             if (orden == 3)
@@ -228,7 +257,10 @@ namespace winTwoPlays
                 if (bytes_actuales == total)
                 {
                     checkEnviado3.Checked = true;
-                    checkEnviado3.ForeColor = Color.Green;
+                }
+                else
+                {
+                    checkEnviado3.Checked = false;
                 }
             }
             if (orden == 4)
@@ -239,7 +271,11 @@ namespace winTwoPlays
                 if (bytes_actuales == total)
                 {
                     checkEnviado4.Checked = true;
-                    checkEnviado4.ForeColor = Color.Green;
+                }
+
+                else
+                {
+                    checkEnviado4.Checked = false;
                 }
             }
         }
@@ -343,9 +379,6 @@ namespace winTwoPlays
                     // 
                     if(number != -1)
                     {
-                        checkEnviado.Checked = false;
-                        checkEnviado.ForeColor = Color.Red;
-
                         disponibles[number] = false; //ocupado
                         id++;
                         conexion.IniciaEnvioArchivo(rutaArchivo, id, number);

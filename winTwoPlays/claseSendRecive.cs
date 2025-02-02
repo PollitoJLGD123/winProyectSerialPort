@@ -376,7 +376,7 @@ namespace winTwoPlays
 
                 Console.WriteLine("Peso imagen : "+ peso_imagen);
 
-                String ruta_temp = $"D:/uwu_{name_archivo}";  // Ruta en la que vamos a Guardar el archivo
+                String ruta_temp = $"E:/Probando/Recibir/{name_archivo}";  // Ruta en la que vamos a Guardar el archivo
 
                 if (File.Exists(ruta_temp))
                 {
