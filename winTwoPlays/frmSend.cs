@@ -269,12 +269,13 @@ namespace winTwoPlays
                 else
                 {
                     number = retornarVacio(disponibles);
-                    Console.WriteLine(number);
+                    // 
                     if(number != -1)
                     {
                         checkEnviado.Checked = false;
                         checkEnviado.ForeColor = Color.Red;
-                        disponibles[number] = false;
+
+                        disponibles[number] = false; //ocupado
                         id++;
                         conexion.IniciaEnvioArchivo(rutaArchivo, id, number);
                     }
