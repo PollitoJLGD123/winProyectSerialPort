@@ -5,6 +5,7 @@ using System.IO.Ports;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO;
+using System.Collections.Generic;
 
 namespace winTwoPlays
 {
@@ -16,14 +17,17 @@ namespace winTwoPlays
         public delegate void HandlerTxRx(object oo, string mensRec);
         public event HandlerTxRx LlegoMensaje;
 
-        public delegate void DelegadoPorcentaje(object oo, float cantidad, float bytes_actuales, float total, int orden);
+        public delegate void DelegadoPorcentaje(object oo, float cantidad, float bytes_actuales, float total, int id);
         public event DelegadoPorcentaje PorcentajeImagen;
 
         public delegate void DelegadoAvisarArchivo(object oo, string ruta);
         public event DelegadoAvisarArchivo AvisarImagen;
 
-        public delegate void DelegadoPorcentajeRecibir(object oo, float cantidad, float bytes_actuales, float total, int orden);
+        public delegate void DelegadoPorcentajeRecibir(object oo, float cantidad, float bytes_actuales, float total, int id);
         public event DelegadoPorcentajeRecibir PorcentajeImagenRecibir;
+
+        public delegate void DelegadoAvisarForm1(object oo, int archivo_acabo);
+        public event DelegadoAvisarForm1 AvisarForm1;
 
 
         byte[] TramaEnvio;
@@ -58,8 +62,8 @@ namespace winTwoPlays
             tramaRelleno = Enumerable.Repeat((byte)'@', 1024).ToArray();
             TramaRecibida = new byte[1024];
 
-            archivosEnviar = new classArchivo[5];
-            archivosRecibir = new classArchivo[5];
+            archivosEnviar = new classArchivo[2];
+            archivosRecibir = new classArchivo[2];
         }
 
         public void Inicializar(string nombrePuerto,int baud,int data_bits, 
@@ -84,7 +88,7 @@ namespace winTwoPlays
 
             if (puerto.BytesToRead >= 1024)
             {
-                Console.WriteLine("Cantidad de lectura" + puerto.BytesToRead); 
+                //Console.WriteLine("Cantidad de lectura" + puerto.BytesToRead); 
 
                 puerto.Read(TramaRecibida, 0, 1024);  //Leemos lo que se encuentre en el puerto en la trama recibida
 
@@ -101,10 +105,29 @@ namespace winTwoPlays
                     case "I":
                         InicioConstruirArchivo();
                         break;
+                    case "L":
+                        AvisarLLegoForm1();
+                        break;
                     default:
                         MessageBox.Show("trama no reconocida");
                         break;
                 }
+            }
+        }
+
+        public void AvisarLLegoForm1()
+        {
+            //int id = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 2));
+
+            int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 3, 2));
+
+            Console.WriteLine("se ejecutó el metodo de L");
+
+            archivosEnviar[orden] = null;
+
+            if (AvisarForm1 != null)
+            {
+                AvisarForm1(this,orden); ////corregimos luegoooooooooo
             }
         }
 
@@ -125,7 +148,6 @@ namespace winTwoPlays
             {
                 MessageBox.Show(ex.Message);
             }
-            
         }
 
         private void MetodoEnviando()
@@ -170,11 +192,11 @@ namespace winTwoPlays
                 LlegoMensaje(this, mensaje_recibir);
         }
 
-        protected virtual void porcentajeImagen(float cantidad,float bytes_actuales,float total,int orden)
+        protected virtual void porcentajeImagen(float cantidad,float bytes_actuales,float total,int id)
         {
             if(PorcentajeImagen != null)
             {
-                PorcentajeImagen(this, cantidad,bytes_actuales,total,orden);
+                PorcentajeImagen(this, cantidad,bytes_actuales,total,id);
             }
         }
 
@@ -184,11 +206,11 @@ namespace winTwoPlays
                 AvisarImagen(this, ruta);
         }
 
-        protected virtual void porcentajeImagenRecibir(float cantidad, float bytes_actuales, float total,int orden)
+        protected virtual void porcentajeImagenRecibir(float cantidad, float bytes_actuales, float total,int id)
         {
             if (PorcentajeImagenRecibir != null)
             {
-                PorcentajeImagenRecibir(this, cantidad, bytes_actuales, total,orden);
+                PorcentajeImagenRecibir(this, cantidad, bytes_actuales, total,id);
             }
         }
 
@@ -201,27 +223,23 @@ namespace winTwoPlays
         }
 
 
-        public void IniciaEnvioArchivo(String rutita,int orden) //ruta y 1
+        public void IniciaEnvioArchivo(String rutita,int id, int orden) //ruta y 1
         {
             try
             {
                 byte[] bytesImagen = File.ReadAllBytes(rutita);  //Obtenemos los bytes del archivo de la ruta puesta
                 string nombre = rutita.Split('.')[0];
                 string extension = rutita.Split('.')[1];
-                string rutitaf = $"{nombre}{orden}.{extension}";
+                string rutitaf = $"{nombre}{id}.{extension}";
 
-                archivoEnviar = new classArchivo(rutitaf, bytesImagen, 0 , orden);
+                archivoEnviar = new classArchivo(rutitaf, bytesImagen, 0 , id, orden);
 
-                archivosEnviar[orden] = archivoEnviar; 
+                archivosEnviar[orden] = archivoEnviar; //
 
-                enviarInformacion(orden); // informacion del archivo
+                enviarInformacion(id,orden); // informacion del archivo
 
-                procesoEnvioArchivo = new Thread(()=> EnviandoArchivo(orden));
+                procesoEnvioArchivo = new Thread(()=> EnviandoArchivo(id,orden));
                 procesoEnvioArchivo.Start();
-
-                //procesoEnvioArchivo = new Thread(new ParameterizedThreadStart(EnviandoArchivo));
-                //hilo.Start(new Object(orden));
-
             }
             catch (Exception ex)
             {
@@ -229,11 +247,12 @@ namespace winTwoPlays
             }
         }
 
-        private void enviarInformacion(int orden)//  "I-0001200000-011-pollito1.txt-0001"  
-                                        // pollito1.txt luis2.txt  pollito.txt
+        private void enviarInformacion(int id, int orden)//  "I-0001200000-011-pollito1.txt-0001"  
         {
             try
             {
+                //classArchivo archivo_enviar = buscarArchivo(id, archivosEnviar);
+
                 int tama = archivosEnviar[orden].bytes.Length;                                  // Tamaño de la imagen:  2050
 
                 string palabra_extension = Path.GetFileName(archivosEnviar[orden].Nombre);      // pollito1.txt 
@@ -244,7 +263,7 @@ namespace winTwoPlays
 
                 int tama_extension = palabra_extension.Length;                          //  pollito.txt  -> 11
 
-                info += tama_extension.ToString("D3") + palabra_extension + orden.ToString("D4");      // 0001        //"I0000002050" - "011" - "pollito.txt"
+                info += tama_extension.ToString("D3") + palabra_extension + id.ToString("D2") + orden.ToString("D2");      // 0001        //"I0000002050" - "011" - "pollito.txt"
 
                 TramaCabeceraInfo = ASCIIEncoding.UTF8.GetBytes(info);
 
@@ -277,7 +296,7 @@ namespace winTwoPlays
             }
         }
 
-        private void EnviandoArchivo(int orden)
+        private void EnviandoArchivo(int Id, int orden)
         {
             try
             {
@@ -285,7 +304,9 @@ namespace winTwoPlays
 
                 byte[] TramCabaceraEnvioArchivo = new byte[5];
 
-                TramCabaceraEnvioArchivo = ASCIIEncoding.UTF8.GetBytes($"A{orden.ToString("D4")}");
+                //classArchivo archivo_enviar = buscarArchivo(Id, archivosEnviar);
+
+                TramCabaceraEnvioArchivo = ASCIIEncoding.UTF8.GetBytes($"A{Id.ToString("D2")}{orden.ToString("D2")}");
 
                 int tamaño_imagen = archivosEnviar[orden].bytes.Length;
 
@@ -315,7 +336,7 @@ namespace winTwoPlays
                     {
                         if (tamaño_imagen < 1019)
                         {
-                            porcentajeImagen(100, archivosEnviar[orden].Avance, tamaño_imagen,orden);
+                            porcentajeImagen(100, archivosEnviar[orden].Avance, tamaño_imagen, orden);
                         }
                         else
                         {
@@ -325,11 +346,11 @@ namespace winTwoPlays
                     }
                     else
                     {
-                        porcentajeImagen(((float)i / (float)cantidad_exacta) * 100, archivosEnviar[orden].Avance, tamaño_imagen, orden); // Delegado para mostrar el porcentaje de la imagen enviada
+                        porcentajeImagen(((float)i / (float)cantidad_exacta) * 100, archivosEnviar[orden].Avance, tamaño_imagen,orden); // Delegado para mostrar el porcentaje de la imagen enviada
                     }
 
                 }
-                MessageBox.Show("Archivo enviado correctamente.");
+                //MessageBox.Show("Archivo enviado correctamente.");
             }
             catch (Exception ex)
             {
@@ -349,7 +370,9 @@ namespace winTwoPlays
 
                 string name_archivo = ASCIIEncoding.UTF8.GetString(TramaRecibida, 14, longitud_extension);  // pollito.txt
 
-                int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 14 + longitud_extension, 4)); // 0001
+                int Id = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 14 + longitud_extension, 2)); // 0001
+
+                int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 16 + longitud_extension, 2));
 
                 byte[] bytes = new byte[peso_imagen];
 
@@ -366,11 +389,11 @@ namespace winTwoPlays
 
                 //pollito.txt pollito1.txt luis.txt pollito2.txt aea.txt
 
-                archivoRecibir = new classArchivo(ruta_temp, bytes, 0, orden);
-
+                archivoRecibir = new classArchivo(ruta_temp, bytes, 0, Id,orden);
+                //archivoRecibir.iniciarFlujo();
                 archivosRecibir[orden] = archivoRecibir;
-
                 archivosRecibir[orden].iniciarFlujo();
+
             }
             catch(Exception ex)
             {
@@ -382,7 +405,9 @@ namespace winTwoPlays
         {
             try
             {
-                int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4)); // 0001
+                int id = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 2)); // 0001
+                int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 3, 2));
+                //classArchivo archivo_recibir = buscarArchivo(id, archivosRecibir);
 
                 //pollito1.txt //pollito2.txt
 
@@ -392,7 +417,7 @@ namespace winTwoPlays
                 {
                     archivosRecibir[orden].EscribiendoArchivo.Write(TramaRecibida, 5, 1019);//Llenamos los datos del archivo que se esta pasando
                     archivosRecibir[orden].Avance += 1019;
-                    porcentajeImagenRecibir(((float)archivosRecibir[orden].Avance / (float)archivosRecibir[orden].bytes.Length) * 100, archivosRecibir[orden].Avance, archivosRecibir[orden].bytes.Length,orden);
+                    porcentajeImagenRecibir(((float)archivosRecibir[orden].Avance / (float)archivosRecibir[orden].bytes.Length) * 100, archivosRecibir[orden].Avance, archivosRecibir[orden].bytes.Length, orden);
 
                 }
                 else
@@ -400,12 +425,38 @@ namespace winTwoPlays
                     archivosRecibir[orden].EscribiendoArchivo.Write(TramaRecibida, 5, bytesRestantes); //Lenamos los ultimos datos del archivo
                     archivosRecibir[orden].Avance += bytesRestantes;
 
-                    porcentajeImagenRecibir(((float)archivosRecibir[orden].Avance / (float)archivosRecibir[orden].bytes.Length) * 100, archivosRecibir[orden].Avance, archivosRecibir[orden].bytes.Length,orden);
+                    porcentajeImagenRecibir(((float)archivosRecibir[orden].Avance / (float)archivosRecibir[orden].bytes.Length) * 100, archivosRecibir[orden].Avance, archivosRecibir[orden].bytes.Length, orden);
 
                     avisarImagen(archivosRecibir[orden].Nombre);            //cuando se termina se activa el delegado para enviar la ruta al frame
 
                     archivosRecibir[orden].EscribiendoArchivo.Close();
                     archivosRecibir[orden].FlujoArchivoRecibir.Close();
+
+                    //envio de la trama que indica construccion total del archivo
+
+                    byte[] tramaAvisar = ASCIIEncoding.UTF8.GetBytes($"L{id.ToString("D2")}{orden.ToString("D2")}"); 
+                    byte[] tramax = Enumerable.Repeat((byte)'@', 1024).ToArray();
+
+                    Array.Copy(tramaAvisar, 0, tramax, 0, tramaAvisar.Length);
+
+                    Thread procesoEnviarAcabo = new Thread(() =>
+                    {
+                        try
+                        {
+                            lock (puertoLock)
+                            {
+                                puerto.Write(tramax, 0, tramax.Length); 
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error en enviandoInformacion: {ex.Message}");
+                        }
+                    });
+
+                    procesoEnviarAcabo.Start();
+
+                    archivosRecibir[orden] = null;
                 }
             }
             catch (IOException ioEx)

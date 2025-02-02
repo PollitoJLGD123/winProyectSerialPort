@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace winTwoPlays
 {
     public partial class frmSend : Form
@@ -24,6 +25,8 @@ namespace winTwoPlays
 
         delegate void porcentajeRecibir(float cantidad, float bytes_actuales, float total, int orden);
 
+        delegate void avisarForm(int archivo_acabo);
+
         hacerMetodoSecundario delegadoMetodo;
         porcentajeEnvio delegadoPorcentaje;
 
@@ -31,9 +34,15 @@ namespace winTwoPlays
 
         porcentajeRecibir delegadoPorcentajeRecibir;
 
+        avisarForm delegadoForm;
+
         String rutaArchivo;
 
-        int number;
+        Dictionary<int, Boolean> disponibles;
+
+        int number = 0;
+        int id = 0;
+
         public frmSend()
         {
             InitializeComponent();
@@ -45,7 +54,11 @@ namespace winTwoPlays
             this.conexion = conexion;
             lblTitulo.Text += $" {name}";
 
-            number = 0;
+            disponibles = new Dictionary<int, Boolean>
+            {
+                { 0, true},
+                { 1, true}
+            };
 
             conexion.LlegoMensaje += new claseSendRecive.HandlerTxRx(llego_Mensaje);
             delegadoMetodo = new hacerMetodoSecundario(MostrandoMensaje);
@@ -59,6 +72,34 @@ namespace winTwoPlays
             conexion.PorcentajeImagenRecibir += new claseSendRecive.DelegadoPorcentajeRecibir(porcentaje_recibir);
             delegadoPorcentajeRecibir = new porcentajeRecibir(llenarBarraRecibir);
 
+            conexion.AvisarForm1 += new claseSendRecive.DelegadoAvisarForm1(avisar_form);
+            delegadoForm = new avisarForm(reducir_number);
+
+        }
+
+        private void avisar_form(object oo,int numero_acabo)
+        {
+            Invoke(delegadoForm,numero_acabo);
+        }
+
+        private void reducir_number(int numero_acabo)
+        {
+
+            disponibles[numero_acabo] = true;
+
+            Console.WriteLine("Se libro del diccionario: " +  number);
+        }
+
+        private int retornarVacio(Dictionary<int, Boolean> diccionario)
+        {
+            foreach (var i in diccionario.OrderBy(k => k.Key))
+            {
+                if (i.Value)
+                {
+                    return i.Key;
+                }
+            }
+            return -1;
         }
 
         private void porcentaje_recibir(object o, float cantidad, float bytes_actuales, float total, int orden)
@@ -72,12 +113,7 @@ namespace winTwoPlays
             {
                 barraRecibir.Value = (int)Math.Ceiling(cantidad);
                 lblBytesConstruccion.Text = $"Bytes de Construccion: {bytes_actuales.ToString()}/{total.ToString()}";
-                if (bytes_actuales < total)
-                {
-                    checkRecibir.Checked = false;
-                    checkRecibir.ForeColor = Color.Red;
-                }
-                else
+                if (bytes_actuales == total)
                 {
                     checkRecibir.Checked = true;
                     checkRecibir.ForeColor = Color.Green;
@@ -87,18 +123,13 @@ namespace winTwoPlays
             {
                 barraRecibir1.Value = (int)Math.Ceiling(cantidad);
                 lblBytesConstruccion1.Text = $"Bytes de Construccion: {bytes_actuales.ToString()}/{total.ToString()}";
-                if (bytes_actuales < total)
-                {
-                    checkRecibir1.Checked = false;
-                    checkRecibir1.ForeColor = Color.Red;
-                }
-                else
+
+                if (bytes_actuales == total)
                 {
                     checkRecibir1.Checked = true;
                     checkRecibir1.ForeColor = Color.Green;
                 }
             }
-           
         }
 
         private void ruta_archivo_enviado(object o, string ruta)
@@ -238,12 +269,15 @@ namespace winTwoPlays
                 }
                 else
                 {
-                    if(number != 4)
+                    number = retornarVacio(disponibles);
+                    Console.WriteLine(number);
+                    if(number != -1)
                     {
                         checkEnviado.Checked = false;
                         checkEnviado.ForeColor = Color.Red;
-                        conexion.IniciaEnvioArchivo(rutaArchivo, number);
-                        number++;
+                        disponibles[number] = false;
+                        id++;
+                        conexion.IniciaEnvioArchivo(rutaArchivo, id, number);
                     }
                     else
                     {
@@ -267,6 +301,11 @@ namespace winTwoPlays
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
         }

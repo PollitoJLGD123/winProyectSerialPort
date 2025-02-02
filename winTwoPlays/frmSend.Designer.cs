@@ -98,6 +98,7 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1374, 703);
             this.panel1.TabIndex = 1;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // checkRecibir
             // 
@@ -142,7 +143,7 @@
             // 
             this.txtRutaEnviada.Enabled = false;
             this.txtRutaEnviada.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRutaEnviada.Location = new System.Drawing.Point(877, 393);
+            this.txtRutaEnviada.Location = new System.Drawing.Point(636, 437);
             this.txtRutaEnviada.Name = "txtRutaEnviada";
             this.txtRutaEnviada.Size = new System.Drawing.Size(317, 52);
             this.txtRutaEnviada.TabIndex = 22;
@@ -152,7 +153,7 @@
             // 
             this.txtRuta.Enabled = false;
             this.txtRuta.Font = new System.Drawing.Font("Adobe Song Std L", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRuta.Location = new System.Drawing.Point(366, 463);
+            this.txtRuta.Location = new System.Drawing.Point(317, 481);
             this.txtRuta.Name = "txtRuta";
             this.txtRuta.Size = new System.Drawing.Size(270, 87);
             this.txtRuta.TabIndex = 21;
@@ -192,7 +193,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(702, 404);
+            this.label7.Location = new System.Drawing.Point(631, 387);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(157, 28);
             this.label7.TabIndex = 15;
@@ -202,7 +203,7 @@
             // btnEnviarImagen
             // 
             this.btnEnviarImagen.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEnviarImagen.Location = new System.Drawing.Point(418, 579);
+            this.btnEnviarImagen.Location = new System.Drawing.Point(357, 609);
             this.btnEnviarImagen.Name = "btnEnviarImagen";
             this.btnEnviarImagen.Size = new System.Drawing.Size(180, 44);
             this.btnEnviarImagen.TabIndex = 14;
@@ -214,7 +215,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(367, 411);
+            this.label6.Location = new System.Drawing.Point(350, 431);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(187, 28);
             this.label6.TabIndex = 11;
@@ -224,7 +225,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(352, 201);
+            this.label5.Location = new System.Drawing.Point(316, 201);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(261, 28);
             this.label5.TabIndex = 10;
@@ -233,7 +234,7 @@
             // btnSeleccionarImagen
             // 
             this.btnSeleccionarImagen.Font = new System.Drawing.Font("Dubai", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSeleccionarImagen.Location = new System.Drawing.Point(361, 255);
+            this.btnSeleccionarImagen.Location = new System.Drawing.Point(331, 249);
             this.btnSeleccionarImagen.Name = "btnSeleccionarImagen";
             this.btnSeleccionarImagen.Size = new System.Drawing.Size(226, 43);
             this.btnSeleccionarImagen.TabIndex = 9;
@@ -280,7 +281,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Script MT Bold", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(692, 144);
+            this.label3.Location = new System.Drawing.Point(656, 79);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(261, 28);
             this.label3.TabIndex = 4;
@@ -318,7 +319,7 @@
             this.lblTitulo.AutoSize = true;
             this.lblTitulo.Font = new System.Drawing.Font("MV Boli", 25.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.ForeColor = System.Drawing.Color.Blue;
-            this.lblTitulo.Location = new System.Drawing.Point(464, 19);
+            this.lblTitulo.Location = new System.Drawing.Point(321, 18);
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Size = new System.Drawing.Size(256, 55);
             this.lblTitulo.TabIndex = 0;
@@ -333,7 +334,7 @@
             this.groupBox1.Controls.Add(this.barraProgreso);
             this.groupBox1.Controls.Add(this.lblBytesEnvio);
             this.groupBox1.Controls.Add(this.checkEnviado);
-            this.groupBox1.Location = new System.Drawing.Point(699, 185);
+            this.groupBox1.Location = new System.Drawing.Point(657, 129);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(309, 163);
             this.groupBox1.TabIndex = 30;
@@ -345,9 +346,9 @@
             this.groupBox3.Controls.Add(this.barraRecibir);
             this.groupBox3.Controls.Add(this.checkRecibir);
             this.groupBox3.Controls.Add(this.lblBytesConstruccion);
-            this.groupBox3.Location = new System.Drawing.Point(698, 464);
+            this.groupBox3.Location = new System.Drawing.Point(636, 503);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(309, 163);
+            this.groupBox3.Size = new System.Drawing.Size(309, 150);
             this.groupBox3.TabIndex = 31;
             this.groupBox3.TabStop = false;
             // 
@@ -356,7 +357,7 @@
             this.groupBox5.Controls.Add(this.barraProgreso1);
             this.groupBox5.Controls.Add(this.lblBytesEnvio1);
             this.groupBox5.Controls.Add(this.checkEnviado1);
-            this.groupBox5.Location = new System.Drawing.Point(1043, 185);
+            this.groupBox5.Location = new System.Drawing.Point(994, 129);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(309, 163);
             this.groupBox5.TabIndex = 31;
@@ -397,9 +398,9 @@
             this.groupBox6.Controls.Add(this.barraRecibir1);
             this.groupBox6.Controls.Add(this.checkRecibir1);
             this.groupBox6.Controls.Add(this.lblBytesConstruccion1);
-            this.groupBox6.Location = new System.Drawing.Point(1042, 464);
+            this.groupBox6.Location = new System.Drawing.Point(985, 503);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(309, 163);
+            this.groupBox6.Size = new System.Drawing.Size(309, 150);
             this.groupBox6.TabIndex = 32;
             this.groupBox6.TabStop = false;
             // 
