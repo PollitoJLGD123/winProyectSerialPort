@@ -287,6 +287,7 @@
             this.comboBaud.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBaud.FormattingEnabled = true;
             this.comboBaud.Items.AddRange(new object[] {
+            "115200",
             "9600",
             "4800",
             "2400"});

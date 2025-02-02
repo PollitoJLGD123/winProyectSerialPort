@@ -230,13 +230,13 @@ namespace winTwoPlays
                 string extension = rutita.Split('.')[1];
                 string rutitaf = $"{nombre}{id}.{extension}";
 
-                archivoEnviar = new classArchivo(rutitaf, bytesImagen, 0 , id, orden);
+                archivoEnviar = new classArchivo(rutitaf, bytesImagen, 0 , orden);
 
                 archivosEnviar[orden] = archivoEnviar; //
 
-                enviarInformacion(id,orden); // informacion del archivo
+                enviarInformacion(orden); // informacion del archivo
 
-                procesoEnvioArchivo = new Thread(()=> EnviandoArchivo(id,orden));
+                procesoEnvioArchivo = new Thread(()=> EnviandoArchivo(orden));
                 procesoEnvioArchivo.Start();
             }
             catch (Exception ex)
@@ -245,11 +245,10 @@ namespace winTwoPlays
             }
         }
 
-        private void enviarInformacion(int id, int orden)//  "I-0001200000-011-pollito1.txt-0001"  
+        private void enviarInformacion(int orden)//  "I-0001200000-011-pollito1.txt-0001"  
         {
             try
             {
-                //classArchivo archivo_enviar = buscarArchivo(id, archivosEnviar);
 
                 int tama = archivosEnviar[orden].bytes.Length;                                  // Tamaño de la imagen:  2050
 
@@ -261,7 +260,7 @@ namespace winTwoPlays
 
                 int tama_extension = palabra_extension.Length;                          //  pollito.txt  -> 11
 
-                info += tama_extension.ToString("D3") + palabra_extension + id.ToString("D2") + orden.ToString("D2");      // 0001        //"I0000002050" - "011" - "pollito.txt"
+                info += tama_extension.ToString("D3") + palabra_extension + orden.ToString("D4");      // 0001        //"I0000002050" - "011" - "pollito.txt"
 
                 TramaCabeceraInfo = ASCIIEncoding.UTF8.GetBytes(info);
 
@@ -294,7 +293,7 @@ namespace winTwoPlays
             }
         }
 
-        private void EnviandoArchivo(int Id, int orden)
+        private void EnviandoArchivo(int orden)
         {
             try
             {
@@ -304,7 +303,7 @@ namespace winTwoPlays
 
                 //classArchivo archivo_enviar = buscarArchivo(Id, archivosEnviar);
 
-                TramCabaceraEnvioArchivo = ASCIIEncoding.UTF8.GetBytes($"A{Id.ToString("D2")}{orden.ToString("D2")}");
+                TramCabaceraEnvioArchivo = ASCIIEncoding.UTF8.GetBytes($"A{orden.ToString("D4")}");
 
                 int tamaño_imagen = archivosEnviar[orden].bytes.Length;
 
@@ -368,9 +367,7 @@ namespace winTwoPlays
 
                 string name_archivo = ASCIIEncoding.UTF8.GetString(TramaRecibida, 14, longitud_extension);  // pollito.txt
 
-                int Id = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 14 + longitud_extension, 2)); // 0001
-
-                int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 16 + longitud_extension, 2));
+                int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 14 + longitud_extension, 4));
 
                 byte[] bytes = new byte[peso_imagen];
 
@@ -383,11 +380,7 @@ namespace winTwoPlays
                     File.Delete(ruta_temp); // Evitamos problemas de sobreescritura 
                 }
 
-                //pollito1.txt pollito2.txt luis3.txt  pollito4.txt aea5.txt
-
-                //pollito.txt pollito1.txt luis.txt pollito2.txt aea.txt
-
-                archivoRecibir = new classArchivo(ruta_temp, bytes, 0, Id,orden);
+                archivoRecibir = new classArchivo(ruta_temp, bytes, 0, orden);
                 //archivoRecibir.iniciarFlujo();
                 archivosRecibir[orden] = archivoRecibir;
                 archivosRecibir[orden].iniciarFlujo();
@@ -402,10 +395,8 @@ namespace winTwoPlays
         private void ConstruirArchivo()
         {
             try
-            {
-                int id = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 2)); // 0001
-                int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 3, 2));
-                //classArchivo archivo_recibir = buscarArchivo(id, archivosRecibir);
+            { 
+                int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4)); // 0001
 
                 //pollito1.txt //pollito2.txt
 
@@ -432,7 +423,7 @@ namespace winTwoPlays
 
                     //envio de la trama que indica construccion total del archivo
 
-                    byte[] tramaAvisar = ASCIIEncoding.UTF8.GetBytes($"L{id.ToString("D2")}{orden.ToString("D2")}"); 
+                    byte[] tramaAvisar = ASCIIEncoding.UTF8.GetBytes($"L{orden.ToString("D4")}");
                     byte[] tramax = Enumerable.Repeat((byte)'@', 1024).ToArray();
 
                     Array.Copy(tramaAvisar, 0, tramax, 0, tramaAvisar.Length);

@@ -65,11 +65,6 @@ namespace winTwoPlays
                 { 4, true},
             };
 
-            //objetos = new Dictionary<int, ProgressBar>
-            //{
-
-            //}
-
             conexion.LlegoMensaje += new claseSendRecive.HandlerTxRx(llego_Mensaje);
             delegadoMetodo = new hacerMetodoSecundario(MostrandoMensaje);
 
