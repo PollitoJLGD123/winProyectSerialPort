@@ -39,6 +39,8 @@ namespace winTwoPlays
         String rutaArchivo;
 
         Dictionary<int, Boolean> disponibles;
+        //Dictionary<int, ProgressBar> objetos;
+
 
         int number = 0;
         int id = 0;
@@ -57,8 +59,16 @@ namespace winTwoPlays
             disponibles = new Dictionary<int, Boolean>
             {
                 { 0, true},
-                { 1, true}
+                { 1, true},
+                { 2, true},
+                { 3, true},
+                { 4, true},
             };
+
+            //objetos = new Dictionary<int, ProgressBar>
+            //{
+
+            //}
 
             conexion.LlegoMensaje += new claseSendRecive.HandlerTxRx(llego_Mensaje);
             delegadoMetodo = new hacerMetodoSecundario(MostrandoMensaje);
@@ -115,7 +125,6 @@ namespace winTwoPlays
                 if (bytes_actuales == total)
                 {
                     checkRecibir.Checked = true;
-                    checkRecibir.ForeColor = Color.Green;
                 }
             }
             if (orden == 1)
@@ -126,7 +135,36 @@ namespace winTwoPlays
                 if (bytes_actuales == total)
                 {
                     checkRecibir1.Checked = true;
-                    checkRecibir1.ForeColor = Color.Green;
+                }
+            }
+            if (orden == 2)
+            {
+                barraRecibir2.Value = (int)Math.Ceiling(cantidad);
+                lblBytesConstruccion2.Text = $"Bytes de Construccion: {bytes_actuales.ToString()}/{total.ToString()}";
+
+                if (bytes_actuales == total)
+                {
+                    checkRecibir2.Checked = true;
+                }
+            }
+            if (orden == 3)
+            {
+                barraRecibir3.Value = (int)Math.Ceiling(cantidad);
+                lblBytesConstruccion3.Text = $"Bytes de Construccion: {bytes_actuales.ToString()}/{total.ToString()}";
+
+                if (bytes_actuales == total)
+                {
+                    checkRecibir3.Checked = true;
+                }
+            }
+            if (orden == 4)
+            {
+                barraRecibir4.Value = (int)Math.Ceiling(cantidad);
+                lblBytesConstruccion4.Text = $"Bytes de Construccion: {bytes_actuales.ToString()}/{total.ToString()}";
+
+                if (bytes_actuales == total)
+                {
+                    checkRecibir4.Checked = true;
                 }
             }
         }
@@ -169,6 +207,39 @@ namespace winTwoPlays
                 {
                     checkEnviado1.Checked = true;
                     checkEnviado1.ForeColor = Color.Green;
+                }
+            }
+            if (orden == 2)
+            {
+                barraProgreso2.Value = (int)Math.Ceiling(cantidad);
+                lblBytesEnvio2.Text = $"Bytes Enviados: {bytes_actuales.ToString()}/{total.ToString()}";
+
+                if (bytes_actuales == total)
+                {
+                    checkEnviado2.Checked = true;
+                    checkEnviado2.ForeColor = Color.Green;
+                }
+            }
+            if (orden == 3)
+            {
+                barraProgreso3.Value = (int)Math.Ceiling(cantidad);
+                lblBytesEnvio3.Text = $"Bytes Enviados: {bytes_actuales.ToString()}/{total.ToString()}";
+
+                if (bytes_actuales == total)
+                {
+                    checkEnviado3.Checked = true;
+                    checkEnviado3.ForeColor = Color.Green;
+                }
+            }
+            if (orden == 4)
+            {
+                barraProgreso4.Value = (int)Math.Ceiling(cantidad);
+                lblBytesEnvio4.Text = $"Bytes Enviados: {bytes_actuales.ToString()}/{total.ToString()}";
+
+                if (bytes_actuales == total)
+                {
+                    checkEnviado4.Checked = true;
+                    checkEnviado4.ForeColor = Color.Green;
                 }
             }
         }
@@ -286,7 +357,7 @@ namespace winTwoPlays
                 }
             }catch(Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("error al enviar: " + ex.Message);
             }
         }
 
@@ -306,6 +377,26 @@ namespace winTwoPlays
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void checkEnviado_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkRecibir1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void progressBar5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void progressBar4_Click(object sender, EventArgs e)
         {
 
         }

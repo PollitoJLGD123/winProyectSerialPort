@@ -6,7 +6,6 @@ using System.Threading;
 using System.Windows.Forms;
 using System.IO;
 using System.Collections.Generic;
-
 namespace winTwoPlays
 {
     public class claseSendRecive
@@ -62,8 +61,8 @@ namespace winTwoPlays
             tramaRelleno = Enumerable.Repeat((byte)'@', 1024).ToArray();
             TramaRecibida = new byte[1024];
 
-            archivosEnviar = new classArchivo[2];
-            archivosRecibir = new classArchivo[2];
+            archivosEnviar = new classArchivo[5];
+            archivosRecibir = new classArchivo[5];
         }
 
         public void Inicializar(string nombrePuerto,int baud,int data_bits, 
@@ -377,7 +376,7 @@ namespace winTwoPlays
 
                 Console.WriteLine("Peso imagen : "+ peso_imagen);
 
-                String ruta_temp = $"E:/Probando/Recibir/{name_archivo}";  // Ruta en la que vamos a Guardar el archivo
+                String ruta_temp = $"D:/uwu_{name_archivo}";  // Ruta en la que vamos a Guardar el archivo
 
                 if (File.Exists(ruta_temp))
                 {
@@ -452,8 +451,8 @@ namespace winTwoPlays
                             MessageBox.Show($"Error en enviandoInformacion: {ex.Message}");
                         }
                     });
+                    procesoEnviarAcabo.Priority = ThreadPriority.Highest;
                     procesoEnviarAcabo.Start();
-
                     archivosRecibir[orden] = null;
                 }
             }
