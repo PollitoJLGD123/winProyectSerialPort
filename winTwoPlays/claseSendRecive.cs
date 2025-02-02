@@ -117,7 +117,6 @@ namespace winTwoPlays
 
         public void AvisarLLegoForm1()
         {
-            //int id = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 2));
 
             int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 3, 2));
 
@@ -434,15 +433,16 @@ namespace winTwoPlays
 
                     //envio de la trama que indica construccion total del archivo
 
-                    byte[] tramaAvisar = ASCIIEncoding.UTF8.GetBytes($"L{id.ToString("D2")}{orden.ToString("D2")}"); 
-                    byte[] tramax = Enumerable.Repeat((byte)'@', 1024).ToArray();
-
-                    Array.Copy(tramaAvisar, 0, tramax, 0, tramaAvisar.Length);
-
+                    
                     Thread procesoEnviarAcabo = new Thread(() =>
                     {
                         try
                         {
+                            byte[] tramaAvisar = ASCIIEncoding.UTF8.GetBytes($"L{id.ToString("D2")}{orden.ToString("D2")}");
+                            byte[] tramax = Enumerable.Repeat((byte)'@', 1024).ToArray();
+
+                            Array.Copy(tramaAvisar, 0, tramax, 0, tramaAvisar.Length);
+
                             lock (puertoLock)
                             {
                                 puerto.Write(tramax, 0, tramax.Length); 
@@ -453,7 +453,7 @@ namespace winTwoPlays
                             MessageBox.Show($"Error en enviandoInformacion: {ex.Message}");
                         }
                     });
-
+                    procesoEnviarAcabo.Priority = ThreadPriority.Highest;
                     procesoEnviarAcabo.Start();
 
                     archivosRecibir[orden] = null;

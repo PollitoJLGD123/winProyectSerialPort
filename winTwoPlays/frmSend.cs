@@ -84,10 +84,9 @@ namespace winTwoPlays
 
         private void reducir_number(int numero_acabo)
         {
+            Console.WriteLine("Se libro el archivo: " + numero_acabo);
 
             disponibles[numero_acabo] = true;
-
-            Console.WriteLine("Se libro del diccionario: " +  number);
         }
 
         private int retornarVacio(Dictionary<int, Boolean> diccionario)
@@ -140,7 +139,7 @@ namespace winTwoPlays
         private void llenarRutaArchivoLlego(string ruta)
         {
             txtRutaEnviada.Text = $"\n Llego un archivo exitosamente: {ruta}";
-            MessageBox.Show($"Llego un archivo exitosamente: {ruta}");
+            //MessageBox.Show($"Llego un archivo exitosamente: {ruta}");
         }
 
         private void porcentaje_actual(object o, float cantidad, float bytes_actuales, float total, int orden)
