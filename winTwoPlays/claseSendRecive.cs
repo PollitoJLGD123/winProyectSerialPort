@@ -54,7 +54,7 @@ namespace winTwoPlays
 
         private ManualResetEvent enviarInformacionCompleta = new ManualResetEvent(false);
 
-        public claseSendRecive() 
+        public claseSendRecive()
         {
             TramaEnvio = new byte[1024];
             TramCabaceraEnvio = new byte[5];
@@ -65,9 +65,9 @@ namespace winTwoPlays
             archivosRecibir = new classArchivo[5];
         }
 
-        public void Inicializar(string nombrePuerto,int baud,int data_bits, 
+        public void Inicializar(string nombrePuerto, int baud, int data_bits,
             StopBits stop_bits, Parity parity_bits)
-        { 
+        {
             puerto = new SerialPort(nombrePuerto, baud, parity_bits, data_bits, stop_bits);
             puerto.ReceivedBytesThreshold = 1024;
 
@@ -99,7 +99,7 @@ namespace winTwoPlays
                         RecibiendoMensaje();
                         break;
                     case "A":
-                        ConstruirArchivo(); 
+                        ConstruirArchivo();
                         break;
                     case "I":
                         InicioConstruirArchivo();
@@ -125,7 +125,7 @@ namespace winTwoPlays
 
             if (AvisarForm1 != null)
             {
-                AvisarForm1(this,orden); ////corregimos luegoooooooooo
+                AvisarForm1(this, orden); ////corregimos luegoooooooooo
             }
         }
 
@@ -133,7 +133,7 @@ namespace winTwoPlays
         {
             try
             {
-                string longMessageString = ConstruirCabecera("M",message.Length,4);
+                string longMessageString = ConstruirCabecera("M", message.Length, 4);
 
                 TramCabaceraEnvio = ASCIIEncoding.UTF8.GetBytes(longMessageString);
 
@@ -159,7 +159,7 @@ namespace winTwoPlays
                     puerto.Write(tramaRelleno, 0, 1019 - TramaEnvio.Length);  //Relleno para asegurar el disparador
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -177,7 +177,7 @@ namespace winTwoPlays
 
                 OnLlegoMensaje(mensaje_recibir);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -190,11 +190,11 @@ namespace winTwoPlays
                 LlegoMensaje(this, mensaje_recibir);
         }
 
-        protected virtual void porcentajeImagen(float cantidad,float bytes_actuales,float total,int id)
+        protected virtual void porcentajeImagen(float cantidad, float bytes_actuales, float total, int id)
         {
-            if(PorcentajeImagen != null)
+            if (PorcentajeImagen != null)
             {
-                PorcentajeImagen(this, cantidad,bytes_actuales,total,id);
+                PorcentajeImagen(this, cantidad, bytes_actuales, total, id);
             }
         }
 
@@ -204,11 +204,11 @@ namespace winTwoPlays
                 AvisarImagen(this, ruta);
         }
 
-        protected virtual void porcentajeImagenRecibir(float cantidad, float bytes_actuales, float total,int id)
+        protected virtual void porcentajeImagenRecibir(float cantidad, float bytes_actuales, float total, int id)
         {
             if (PorcentajeImagenRecibir != null)
             {
-                PorcentajeImagenRecibir(this, cantidad, bytes_actuales, total,id);
+                PorcentajeImagenRecibir(this, cantidad, bytes_actuales, total, id);
             }
         }
 
@@ -216,27 +216,53 @@ namespace winTwoPlays
         {
             while (puerto.IsOpen)
             {
-                BufferSalidaVacio = puerto.BytesToWrite > 0 ?  false :  true;
+                BufferSalidaVacio = puerto.BytesToWrite > 0 ? false : true;
             }
         }
 
+        private string ReemplazarTildes(string texto)
+        {
+            var tildes = new Dictionary<char, char>
+            {
+                { 'á', 'a' }, { 'é', 'e' }, { 'í', 'i' }, { 'ó', 'o' }, { 'ú', 'u' },
+                { 'Á', 'A' }, { 'É', 'E' }, { 'Í', 'I' }, { 'Ó', 'O' }, { 'Ú', 'U' },
+                { 'ñ', 'n' }, { 'Ñ', 'N' }
+            };
 
-        public void IniciaEnvioArchivo(String rutita,int id, int orden) //ruta y 1
+            StringBuilder resultado = new StringBuilder();// Recorrer la cadena y reemplazar las letras con tildes
+            foreach (char c in texto)
+            {
+                if (tildes.ContainsKey(c))
+                {
+                    resultado.Append(tildes[c]); // Reemplazar la letra con tilde
+                }
+                else
+                {
+                    resultado.Append(c); // Mantener el carácter original
+                }
+            }
+
+            return resultado.ToString();
+        }
+
+        public void IniciaEnvioArchivo(String rutita, int id, int orden) //ruta y 1
         {
             try
             {
+                
                 byte[] bytesImagen = File.ReadAllBytes(rutita);  //Obtenemos los bytes del archivo de la ruta puesta
+                rutita = ReemplazarTildes(rutita); // Reemplazar tildes
                 string nombre = rutita.Split('.')[0];
                 string extension = rutita.Split('.')[1];
                 string rutitaf = $"{nombre}{id}.{extension}";
 
-                archivoEnviar = new classArchivo(rutitaf, bytesImagen, 0 , orden);
+                archivoEnviar = new classArchivo(rutitaf, bytesImagen, 0, orden);
 
                 archivosEnviar[orden] = archivoEnviar; //
 
                 enviarInformacion(orden); // informacion del archivo
 
-                procesoEnvioArchivo = new Thread(()=> EnviandoArchivo(orden));
+                procesoEnvioArchivo = new Thread(() => EnviandoArchivo(orden));
                 procesoEnvioArchivo.Start();
             }
             catch (Exception ex)
@@ -343,7 +369,7 @@ namespace winTwoPlays
                     }
                     else
                     {
-                        porcentajeImagen(((float)i / (float)cantidad_exacta) * 100, archivosEnviar[orden].Avance, tamaño_imagen,orden); // Delegado para mostrar el porcentaje de la imagen enviada
+                        porcentajeImagen(((float)i / (float)cantidad_exacta) * 100, archivosEnviar[orden].Avance, tamaño_imagen, orden); // Delegado para mostrar el porcentaje de la imagen enviada
                     }
 
                 }
@@ -371,9 +397,9 @@ namespace winTwoPlays
 
                 byte[] bytes = new byte[peso_imagen];
 
-                Console.WriteLine("Peso imagen : "+ peso_imagen);
+                Console.WriteLine("Peso imagen : " + peso_imagen);
 
-                String ruta_temp = $"E:/Probando/Recibir/{name_archivo}";  // Ruta en la que vamos a Guardar el archivo
+                String ruta_temp = $"D:/uwu_{name_archivo}";  // Ruta en la que vamos a Guardar el archivo
 
                 if (File.Exists(ruta_temp))
                 {
@@ -386,7 +412,7 @@ namespace winTwoPlays
                 archivosRecibir[orden].iniciarFlujo();
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -395,7 +421,7 @@ namespace winTwoPlays
         private void ConstruirArchivo()
         {
             try
-            { 
+            {
                 int orden = Convert.ToInt32(ASCIIEncoding.UTF8.GetString(TramaRecibida, 1, 4)); // 0001
 
                 //pollito1.txt //pollito2.txt
@@ -467,7 +493,7 @@ namespace winTwoPlays
             puerto.Close();
         }
 
-        private string ConstruirCabecera(string identificador, int longitud,int cantidad)
+        private string ConstruirCabecera(string identificador, int longitud, int cantidad)
         {
             return identificador + longitud.ToString($"D{cantidad}"); //d4
             // "M0080"

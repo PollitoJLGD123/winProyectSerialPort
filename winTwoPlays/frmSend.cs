@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Text.RegularExpressions;
 
 namespace winTwoPlays
 {
@@ -328,6 +328,8 @@ namespace winTwoPlays
                 MessageBox.Show(ex.Message);
             }
         }
+
+        
 
         private void btnConstruir_Click(object sender, EventArgs e)
         {
